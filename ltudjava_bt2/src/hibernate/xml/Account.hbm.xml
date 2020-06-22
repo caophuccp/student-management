@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 8, 2020 10:30:36 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class catalog="dbqlsv" name="hibernate.java.Account" optimistic-lock="version" table="TaiKhoan">
+        <id name="username" type="string">
+            <column length="50" name="TenDangNhap"/>
+            <generator class="assigned"/>
+        </id>
+
+        <property name="password" type="string">
+            <column length="50" name="MatKhau"/>
+        </property>
+
+        <property name="category" type="int">
+            <column name="LoaiTK"/>
+        </property>
+
+    </class>
+</hibernate-mapping>

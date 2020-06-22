@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 8, 2020 10:30:36 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class catalog="dbqlsv" name="hibernate.java.Student" optimistic-lock="version" table="SinhVien">
+        <id name="studentID" type="string">
+            <column length="9" name="MSSV"/>
+            <generator class="assigned"/>
+        </id>
+
+        <property name="name" type="string">
+            <column length="50" name="Ten"/>
+        </property>
+
+        <property name="gender" type="string">
+            <column length="5" name="GioiTinh"/>
+        </property>
+
+        <property name="idCardNo" type="string">
+            <column length="9" name="CMND"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,24 +1,83 @@
 package screens;
 
 
+import hibernate.java.Account;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class TCHomeScreen extends Screen {
-
-    public TCHomeScreen() {
+    private Account currentUser;
+    public TCHomeScreen(Account account) {
+        this.currentUser = account;
         initComponents();
         setLocationRelativeTo(null);
-//        setVisible(true);
+        btn1.setText("Thêm Danh Sách Lớp");
+        btn2.setText("Xem Danh Sách Lớp");
+        btn3.setText("Thêm Sinh Viên");
+        btn4.setText("Nhập Thời Khoá Biểu");
+        btn5.setText("Xem Thời Khoá Biểu");
+        btn6.setText("Nhập Bảng Điểm");
+        btn7.setText("Xem Bảng Điểm");
+        btn8.setText("Sửa Điểm");
+        btn9.setText("jButton1");
+        btn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                importStudentList();
+            }
+        });
+        btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dsClass();
+            }
+        });
+        btn3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addStudent();
+            }
+        });
+        btn4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                importClassSchedule();
+            }
+        });
+        btn5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dsClassSchedule();
+            }
+        });
+        btn6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                importATranscript();
+            }
+        });
+        btn7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                academicTranscript();
+            }
+        });
+        btn8.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fixAcademicTranscript();
+            }
+        });
     }
     private void initComponents() {
 
         topBar = new javax.swing.JPanel();
         logoutBtn = new javax.swing.JButton();
         accBtn = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
+        separator = new javax.swing.JSeparator();
         bodyPanel = new javax.swing.JPanel();
         btnPanel1 = new javax.swing.JPanel();
         btn1 = new javax.swing.JButton();
@@ -69,55 +128,46 @@ public class TCHomeScreen extends Screen {
 
         bodyPanel.setLayout(new java.awt.GridLayout(3, 3));
 
-        btn1.setText("Thêm Danh Sách Lớp");
         btn1.setPreferredSize(btnSize);
         btnPanel1.add(btn1);
 
         bodyPanel.add(btnPanel1);
 
-        btn2.setText("Xem Danh Sách Lớp");
         btn2.setPreferredSize(btnSize);
         btnPanel2.add(btn2);
 
         bodyPanel.add(btnPanel2);
 
-        btn3.setText("Thêm Sinh Viên");
         btn3.setPreferredSize(btnSize);
         btnPanel3.add(btn3);
 
         bodyPanel.add(btnPanel3);
 
-        btn4.setText("Nhập Thời Khoá Biểu");
         btn4.setPreferredSize(btnSize);
         btnPanel4.add(btn4);
 
         bodyPanel.add(btnPanel4);
 
-        btn5.setText("Xem Thời Khoá Biểu");
         btn5.setPreferredSize(btnSize);
         btnPanel5.add(btn5);
 
         bodyPanel.add(btnPanel5);
 
-        btn6.setText("Nhập Bảng Điểm");
         btn6.setPreferredSize(btnSize);
         btnPanel6.add(btn6);
 
         bodyPanel.add(btnPanel6);
 
-        btn7.setText("Xem Bảng Điểm");
         btn7.setPreferredSize(btnSize);
         btnPanel7.add(btn7);
 
         bodyPanel.add(btnPanel7);
 
-        btn8.setText("Sửa Điểm");
         btn8.setPreferredSize(btnSize);
         btnPanel8.add(btn8);
 
         bodyPanel.add(btnPanel8);
 
-        btn9.setText("jButton1");
         btn9.setPreferredSize(btnSize);
         btnPanel9.add(btn9);
 
@@ -130,7 +180,7 @@ public class TCHomeScreen extends Screen {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jSeparator1)
+                                        .addComponent(separator)
                                         .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(topBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
@@ -141,7 +191,7 @@ public class TCHomeScreen extends Screen {
                                 .addContainerGap()
                                 .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
@@ -150,8 +200,34 @@ public class TCHomeScreen extends Screen {
         pack();
     }
 
+    private void fixAcademicTranscript(){
+        changeScreen(new FixScoreScreen(currentUser));
+    }
+
+    private void academicTranscript(){
+        changeScreen(new ScoreTableScreen(currentUser));
+    }
+    private void importATranscript(){
+        changeScreen(new ImportScoreTableScreen(currentUser));
+    }
+    private void dsClassSchedule(){
+        changeScreen(new ClassScheduleScreen(currentUser));
+    }
+    private void importStudentList(){
+        changeScreen(new ImportClassScreen(currentUser));
+    }
+    private void dsClass(){
+        changeScreen(new StudentListScreen(currentUser));
+    }
+    private void addStudent(){
+        changeScreen(new AddStudentScreen(currentUser));
+    }
+    private void importClassSchedule(){
+        changeScreen(new ImportClassScheduleScreen(currentUser));
+    }
+
     private void changePassword(){
-        changeScreen(new AccSettingsScreen(this));
+        changeScreen(new AccSettingsScreen(currentUser));
     }
 
     private void logout(){
@@ -179,7 +255,6 @@ public class TCHomeScreen extends Screen {
     private javax.swing.JPanel btnPanel7;
     private javax.swing.JPanel btnPanel8;
     private javax.swing.JPanel btnPanel9;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator separator;
     private javax.swing.JPanel topBar;
-    // End of variables declaration
 }

@@ -1,12 +1,16 @@
 package screens;
 
+import hibernate.java.Account;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class SVHomeScreen extends Screen {
-    public SVHomeScreen() {
+    private Account currentUser;
+    public SVHomeScreen(Account account) {
+        this.currentUser = account;
         initComponents();
         setLocationRelativeTo(null);
 //        setVisible(true);
@@ -83,7 +87,7 @@ public class SVHomeScreen extends Screen {
     }
 
     private void changePassword(){
-        changeScreen(new AccSettingsScreen(this));
+        changeScreen(new AccSettingsScreen(currentUser));
     }
 
     private void logout(){

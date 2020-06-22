@@ -1,14 +1,17 @@
 package screens;
 
 
+import hibernate.java.Account;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AccSettingsScreen extends Screen {
     private Screen preScene;
-    public AccSettingsScreen(Screen preScene) {
-        this.preScene = preScene;
+    private Account currentUser;
+    public AccSettingsScreen(Account account) {
+        this.currentUser = account;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -124,7 +127,11 @@ public class AccSettingsScreen extends Screen {
     }
 
     private void back(){
-        changeScreen(preScene);
+        if (currentUser.getCategory() == 1) {
+            changeScreen(new TCHomeScreen(currentUser));
+        } else {
+            changeScreen(new SVHomeScreen(currentUser));
+        }
     }
 
     private void changePassword(){
