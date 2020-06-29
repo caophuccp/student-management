@@ -1,30 +1,30 @@
 package hibernate.dao;
 
-import hibernate.java.ClassSchedule;
 import hibernate.java.HibernateUtil;
+import hibernate.java.StudentLOS;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class ClassScheduleDAO {
-    public static ClassSchedule getStudent(String id) {
+public class StudentLOSDAO {
+    public static StudentLOS getStudentListOS(String id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        ClassSchedule schedule = null;
+        StudentLOS s = null;
         try {
-            schedule = session.get(ClassSchedule.class, id);
+            s = session.get(StudentLOS.class, id);
         } finally {
             session.close();
         }
-        return schedule;
+        return s;
     }
 
-    public static boolean add(ClassSchedule o) {
+    public static boolean add(StudentLOS s) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.save(o);
+            session.save(s);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
@@ -36,12 +36,12 @@ public class ClassScheduleDAO {
         return true;
     }
 
-    public static boolean remove(String id) {
+    public static boolean removeStudentListOS(String id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        ClassSchedule schedule = null;
+        StudentLOS s = null;
         try {
-            schedule = session.get(ClassSchedule.class, id);
-            session.delete(schedule);
+            s = session.get(StudentLOS.class, id);
+            session.delete(s);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -52,9 +52,9 @@ public class ClassScheduleDAO {
         return true;
     }
 
-    public static List<ClassSchedule> getList(String query){
+    public static List<StudentLOS> getList(String query){
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<ClassSchedule> list = null;
+        List<StudentLOS> list = null;
         try {
             list = session.createQuery(query).list();
         } catch (Exception e) {
@@ -66,11 +66,11 @@ public class ClassScheduleDAO {
         return list;
     }
 
-    public static List<ClassSchedule> getList(){
+    public static List<StudentLOS> getList(){
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<ClassSchedule> list = null;
+        List<StudentLOS> list = null;
         try {
-            list = session.createQuery("from hibernate.java.ClassSchedule").list();
+            list = session.createQuery("from hibernate.java.StudentLOS").list();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,10 +1,13 @@
 package screens;
 
+import hibernate.dao.ClassScheduleDAO;
 import hibernate.dao.IClassDAO;
 import hibernate.dao.StudentDAO;
+import hibernate.dao.StudentLOSDAO;
 import hibernate.java.Account;
 import hibernate.java.IClass;
 import hibernate.java.Student;
+import hibernate.java.StudentLOS;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +25,7 @@ public class StudentListScreen extends Screen{
         setLocationRelativeTo(null);
         setVisible(true);
 
+        table.setEnabled(false);
         tableModel.addColumn("STT");
         tableModel.addColumn("MSSV");
         tableModel.addColumn("Họ Tên");
@@ -35,7 +39,32 @@ public class StudentListScreen extends Screen{
         for (IClass iClass : il) {
             classModel.addElement(iClass.getClassID());
         }
+        reloadSubjectModel();
+    }
+
+    private void reloadSubjectModel(){
+        subjectModel.removeAllElements();
         subjectModel.addElement("----");
+        String classID = (String)classIDComboBox.getSelectedItem();
+        ClassScheduleDAO.getList().stream()
+                .filter((cs)->cs.getClassID().equals(classID))
+                .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
+    }
+
+    private void reloadData(){
+        String ci = (String)classIDComboBox.getSelectedItem();
+        String si = (String)subComboBox.getSelectedItem();
+        String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '" + ci + "'";
+        if (si != null && !"----".equals(si)) query += "and SLOS.subjectID = '" + si + "')";
+        else query += ")";
+
+        query = "from hibernate.java.Student S where S.studentID in " + query;
+        List<Student> studentList = StudentDAO.getList(query);
+        tableModel.setRowCount(0);
+        for (int i = 0; i < studentList.size(); i++) {
+            Student s = studentList.get(i);
+            tableModel.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
+        }
     }
 
     private void initComponents() {
@@ -163,17 +192,11 @@ public class StudentListScreen extends Screen{
         pack();
     }
     private void classIDComboBoxActionPerformed(ActionEvent evt) {
-        String ci = (String)classIDComboBox.getSelectedItem();
-        List<Student> studentList = StudentDAO.getList().stream()
-                .filter((s)->s.getClassID().equals(ci)).collect(Collectors.toList());
-        tableModel.setRowCount(0);
-        for (int i = 0; i < studentList.size(); i++) {
-            Student s = studentList.get(i);
-            tableModel.addRow(new Object[]{"" + i, s.getClassID(), s.getName(), s.getGender(), s.getIdCardNo()});
-        }
+        reloadSubjectModel();
+        reloadData();
     }
-
     private void subComboBoxActionPerformed(ActionEvent evt) {
+        reloadData();
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {

@@ -8,18 +8,18 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class ScoreDAO {
-    public static Score getScore(String id) {
+    public static Score get(Score s) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Score s = null;
+        Score score = null;
         try {
-            s = session.get(Score.class, id);
+            score = session.get(Score.class, s);
         } finally {
             session.close();
         }
-        return s;
+        return score;
     }
 
-    public static boolean addScore(Score s) {
+    public static boolean add(Score s) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
         try {
@@ -29,38 +29,58 @@ public class ScoreDAO {
         } catch (Exception e) {
             transaction.rollback();
             return false;
-        }
-        finally {
+        } finally {
             session.close();
         }
         return true;
     }
 
-    public static boolean removeScore(String id) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Score s = null;
-        try {
-            s = session.get(Score.class, id);
+    public static boolean removeScore(Score score) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Score s = null;
+            s = session.get(Score.class, score);
             session.delete(s);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        finally {
+        return true;
+    }
+
+    public static boolean update(Score s) {
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Score tmp = new Score(s.getStudentID(), null, s.getClassID(),
+                s.getSubjectID(), null, null, null, null);
+        if (get(tmp) == null) {
+            return false;
+        }
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.update(s);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
             session.close();
         }
         return true;
     }
 
-    public static List<Score> getList(){
+    public static List<Score> getList() {
+        return getList("from hibernate.java.Score");
+    }
+
+    public static List<Score> getList(String query) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<Score> list = null;
         try {
-            list = session.createQuery("from hibernate.java.Score").list();
+            list = session.createQuery(query).list();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             session.close();
         }
         return list;

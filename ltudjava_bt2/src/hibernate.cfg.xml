@@ -53,6 +53,6 @@ Contributor(s):
         <mapping resource="hibernate/xml/Score.hbm.xml"/>
         <mapping resource="hibernate/xml/Subject.hbm.xml"/>
         <mapping resource="hibernate/xml/ClassSchedule.hbm.xml"/>
-
+        <mapping resource="hibernate/xml/StudentLOS.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

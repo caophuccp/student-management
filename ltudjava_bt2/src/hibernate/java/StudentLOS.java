@@ -1,17 +1,17 @@
 package hibernate.java;
 
-public class StudentListOS implements java.io.Serializable{
+public class StudentLOS implements java.io.Serializable{
     String studentID;
     String classID;
     String subjectID;
 
-    public StudentListOS() {
+    public StudentLOS() {
         this.studentID = null;
         this.classID = null;
         this.subjectID = null;
     }
 
-    public StudentListOS(String studentID, String classID, String subjectID) {
+    public StudentLOS(String studentID, String classID, String subjectID) {
         this.studentID = studentID;
         this.classID = classID;
         this.subjectID = subjectID;

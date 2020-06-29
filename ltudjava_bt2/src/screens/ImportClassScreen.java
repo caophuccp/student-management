@@ -1,22 +1,20 @@
 package screens;
 
-import CSV.CSVReader;
+import helpers.CSVReader;
+import helpers.Helper;
 import hibernate.dao.IClassDAO;
 import hibernate.dao.StudentDAO;
 import hibernate.java.Account;
 import hibernate.java.IClass;
 import hibernate.java.Student;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 
 public class ImportClassScreen extends Screen {
@@ -53,6 +51,12 @@ public class ImportClassScreen extends Screen {
         fileLbl = new javax.swing.JLabel();
         tablePanel = new javax.swing.JPanel();
         tableScrollPanel = new javax.swing.JScrollPane();
+        tableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return !(column == 0 || column == 5);
+            }
+        };
         table = new javax.swing.JTable(tableModel);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -220,8 +224,8 @@ public class ImportClassScreen extends Screen {
         int r = fileChooser.showDialog(this, "Chọn file");
         if (r == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            fileLbl.setText(file.getAbsolutePath());
-            buildTableItem(CSVReader.getList(file));
+            fileLbl.setText(Helper.getPath(file.getAbsolutePath()));
+            buildTableItem(CSVReader.getStudentList(file));
         }
     }
 
@@ -230,7 +234,7 @@ public class ImportClassScreen extends Screen {
 
         for (int i = 0; i < studentList.size(); i++) {
             Student s = studentList.get(i);
-            tableModel.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo(),"-"});
+            tableModel.addRow(new Object[]{"" + (i + 1), s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo(),"-"});
         }
     }
 
@@ -250,7 +254,7 @@ public class ImportClassScreen extends Screen {
     private javax.swing.JTable table;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JScrollPane tableScrollPanel;
-    private DefaultTableModel tableModel = new DefaultTableModel();
+    private DefaultTableModel tableModel;
 //    private DefaultTableCellRenderer tableCellRenderer;
     private JButton submitBtn = new JButton();
 

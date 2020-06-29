@@ -1,8 +1,13 @@
 package screens;
 
-import CSV.CSVReader;
+import helpers.CSVReader;
+import helpers.Helper;
+import hibernate.dao.ClassScheduleDAO;
+import hibernate.dao.IClassDAO;
+import hibernate.dao.ScoreDAO;
 import hibernate.java.Account;
-import hibernate.java.Student;
+import hibernate.java.IClass;
+import hibernate.java.Score;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,33 +17,49 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ImportScoreTableScreen extends Screen {
     Account currentUser;
+
     public ImportScoreTableScreen(Account currentUser) {
         this.currentUser = currentUser;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);
 
-        model.addColumn("STT");
-        model.addColumn("MSSV");
-        model.addColumn("Họ Tên");
-        model.addColumn("Điểm GK");
-        model.addColumn("Điểm CK");
-        model.addColumn("Điểm Khác");
-        model.addColumn("Điểm Tổng");
+        tableModel.addColumn("STT");
+        tableModel.addColumn("MSSV");
+        tableModel.addColumn("Họ Tên");
+        tableModel.addColumn("Điểm GK");
+        tableModel.addColumn("Điểm CK");
+        tableModel.addColumn("Điểm Khác");
+        tableModel.addColumn("Điểm Tổng");
+        tableModel.addColumn("Trạng Thái");
 
-        classModel.addElement("18_1");
-        classModel.addElement("18_2");
-        classModel.addElement("18_3");
-        classModel.addElement("18_4");
+        List<IClass> il = IClassDAO.getList();
+        if (il.isEmpty()) {
+            classModel.addElement("----");
+        }
+        for (IClass iClass : il) {
+            classModel.addElement(iClass.getClassID());
+        }
 
-        subModel.addElement("----");
-        subModel.addElement("CT01");
-        subModel.addElement("CT02");
-        subModel.addElement("CT03");
+        reloadSubjectModel();
+    }
+
+    private void reloadSubjectModel() {
+        subjectModel.removeAllElements();
+        subjectModel.addElement("----");
+        String classID = (String) classIDCb.getSelectedItem();
+        ClassScheduleDAO.getList().stream()
+                .filter((cs) -> cs.getClassID().equals(classID))
+                .collect(Collectors.toList()).forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
+    }
+
+    private void reloadData() {
+
     }
 
     private void initComponents() {
@@ -57,12 +78,18 @@ public class ImportScoreTableScreen extends Screen {
         fileLbl = new JLabel();
         tablePanel = new JPanel();
         tableScrollPanel = new JScrollPane();
-        table = new JTable(model);
+        tableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return !(column == 0 || column == 7);
+            }
+        };
+        table = new JTable(tableModel);
 
-        subModel = new DefaultComboBoxModel<>();
+        subjectModel = new DefaultComboBoxModel<>();
         subPanel = new JPanel();
         subLbl = new JLabel();
-        subComboBox = new JComboBox(subModel);
+        subComboBox = new JComboBox(subjectModel);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,8 +105,8 @@ public class ImportScoreTableScreen extends Screen {
 
         submitBtn.setText("Thêm");
         submitBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                submitBtnActionPerformed(evt);
+            public void actionPerformed(ActionEvent e) {
+                submitBtnActionPerformed(e);
             }
         });
         appBarPanel.add(submitBtn);
@@ -92,7 +119,13 @@ public class ImportScoreTableScreen extends Screen {
         classIDLbl.setPreferredSize(new java.awt.Dimension(120, 30));
         classIDPanel.add(classIDLbl);
 
-        classIDCb.setPreferredSize(new java.awt.Dimension(90, 30));
+        classIDCb.setPreferredSize(new java.awt.Dimension(120, 30));
+        classIDCb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                classIDCbActionPerformed(e);
+            }
+        });
         classIDPanel.add(classIDCb);
 
         subLbl.setText("Môn Học");
@@ -100,6 +133,12 @@ public class ImportScoreTableScreen extends Screen {
         subPanel.add(subLbl);
 
         subComboBox.setPreferredSize(new java.awt.Dimension(120, 30));
+        subComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                subComboBoxActionPerformed(e);
+            }
+        });
         subPanel.add(subComboBox);
 
         fileChooserPanel.setLayout(new java.awt.GridLayout(2, 0));
@@ -191,7 +230,53 @@ public class ImportScoreTableScreen extends Screen {
     }
 
     private void submitBtnActionPerformed(ActionEvent evt) {
+        if (tableModel.getRowCount() == 0) {
+            return;
+        }
+        int n = tableModel.getRowCount();
+        String id;
+        String name;
+        String gk;
+        String ck;
+        String khac;
+        String tong;
+        String classID = (String)classIDCb.getSelectedItem();
+        String subjectID = (String)subComboBox.getSelectedItem();
+        boolean error = false;
+        for (int i = 0; i < n; i++) {
+            id = (String) tableModel.getValueAt(i, 1);
+            name = (String) tableModel.getValueAt(i, 2);
+            gk = (String) tableModel.getValueAt(i, 3);
+            ck = (String) tableModel.getValueAt(i, 4);
+            khac = (String) tableModel.getValueAt(i, 5);
+            tong = (String) tableModel.getValueAt(i, 6);
+            Score s = new Score(id, name, classID, subjectID,
+                    Helper.parseFloat(gk), Helper.parseFloat(ck), Helper.parseFloat(khac), Helper.parseFloat(tong));
 
+            if (!ScoreDAO.add(s)) {
+                error = true;
+                tableModel.setValueAt("F", i, 7);
+            } else {
+                tableModel.setValueAt("T", i, 7);
+            }
+        }
+
+        if (!error) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thành Công","Message",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void subComboBoxActionPerformed(ActionEvent e) {
+        reloadData();
+    }
+
+    private void classIDCbActionPerformed(ActionEvent e) {
+        reloadSubjectModel();
+        reloadData();
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {
@@ -210,16 +295,18 @@ public class ImportScoreTableScreen extends Screen {
         int r = fileChooser.showDialog(this, "Chọn file");
         if (r == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            fileLbl.setText(file.getAbsolutePath());
-            buildTableItem(CSVReader.getList(file));
+            fileLbl.setText(Helper.getPath(file.getAbsolutePath()));
+            buildTableItem(CSVReader.getScoreList(file));
         }
     }
 
-    void buildTableItem(List<Student> studentList) {
-        model.setRowCount(0);
+    void buildTableItem(List<Score> studentList) {
+        tableModel.setRowCount(0);
         for (int i = 0; i < studentList.size(); i++) {
-            Student s = studentList.get(i);
-            model.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
+            Score s = studentList.get(i);
+            tableModel.addRow(new Object[]{String.valueOf(i + 1), s.getStudentID(), s.getStudentName(),
+                    String.valueOf(s.getGk()), String.valueOf(s.getCk()),
+                    String.valueOf(s.getKhac()),String.valueOf(s.getTong()), "-"});
         }
     }
 
@@ -239,12 +326,12 @@ public class ImportScoreTableScreen extends Screen {
     private JTable table;
     private JPanel tablePanel;
     private JScrollPane tableScrollPanel;
-    private DefaultTableModel model = new DefaultTableModel();
+    private DefaultTableModel tableModel;
     private DefaultComboBoxModel<String> classModel = new DefaultComboBoxModel<>();
     private JButton submitBtn = new JButton();
 
     private JPanel subPanel;
     private JLabel subLbl;
     private JComboBox subComboBox;
-    private DefaultComboBoxModel<String> subModel;
+    private DefaultComboBoxModel<String> subjectModel;
 }

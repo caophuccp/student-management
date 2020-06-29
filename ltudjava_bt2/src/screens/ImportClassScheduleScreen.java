@@ -1,13 +1,15 @@
 package screens;
 
-import CSV.CSVReader;
-import hibernate.java.Student;
-import hibernate.java.Account;
+import helpers.CSVReader;
+import helpers.Helper;
+import hibernate.dao.*;
+import hibernate.java.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -15,22 +17,27 @@ import javax.swing.table.DefaultTableModel;
 
 public class ImportClassScheduleScreen extends Screen {
     Account currentUser;
+    List<Subject> subjectList;
+    List<ClassSchedule> csList;
     public ImportClassScheduleScreen(Account currentUser) {
         this.currentUser = currentUser;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);
 
-        model.addColumn("STT");
-        model.addColumn("Mã Môn");
-        model.addColumn("Tên Môn");
-        model.addColumn("Phòng Học");
+        tableModel.addColumn("STT");
+        tableModel.addColumn("Mã Môn");
+        tableModel.addColumn("Tên Môn");
+        tableModel.addColumn("Phòng Học");
+        tableModel.addColumn("Trạng Thái");
 
-        classModel.addElement("18_1");
-        classModel.addElement("18_2");
-        classModel.addElement("18_3");
-        classModel.addElement("18_4");
-
+        List<IClass> il = IClassDAO.getList();
+        if (il.isEmpty()) {
+            classModel.addElement("----");
+        }
+        for (IClass iClass : il) {
+            classModel.addElement(iClass.getClassID());
+        }
     }
 
     private void initComponents() {
@@ -49,7 +56,13 @@ public class ImportClassScheduleScreen extends Screen {
         fileLbl = new javax.swing.JLabel();
         tablePanel = new javax.swing.JPanel();
         tableScrollPanel = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable(model);
+        tableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return !(column == 0 || column == 4);
+            }
+        };
+        table = new javax.swing.JTable(tableModel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,7 +92,7 @@ public class ImportClassScheduleScreen extends Screen {
         classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
-        classIDCb.setPreferredSize(new java.awt.Dimension(90, 30));
+        classIDCb.setPreferredSize(new java.awt.Dimension(120, 30));
         classIDPanel.add(classIDCb);
 
         fileChooserPanel.setLayout(new java.awt.GridLayout(2, 0));
@@ -166,11 +179,40 @@ public class ImportClassScheduleScreen extends Screen {
         pack();
     }
 
-    private void submitBtnActionPerformed(ActionEvent evt) {
+    private void submitBtnActionPerformed(ActionEvent e) {
+        if (tableModel.getRowCount() == 0) {
+            return;
+        }
+        int n = subjectList.size();
+        String classID = (String) classIDCb.getSelectedItem();
+        boolean error = false;
+        for (int i = 0; i < n; i++) {
+            Subject sb = subjectList.get(i);
+            ClassSchedule cs = csList.get(i);
+            cs.setClassID(classID);
+            if (!SubjectDAO.addSubject(sb) || !ClassScheduleDAO.add(cs)) {
+                error = true;
+                tableModel.setValueAt("F", i, 4);
+            } else {
+                tableModel.setValueAt("T", i, 4);
+            }
+            StudentDAO.getList().stream()
+                    .filter((s)->s.getClassID().equals(classID)).collect(Collectors.toList())
+                    .forEach((s)->{
+                        StudentLOSDAO.add(new StudentLOS(s.getStudentID(),classID,sb.getId()));
+                    });
+        }
 
+        if (!error) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thành Công","Message",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
-    private void backBtnActionPerformed(ActionEvent evt) {
+    private void backBtnActionPerformed(ActionEvent e) {
         if (currentUser.getCategory() == 1) {
             changeScreen(new TCHomeScreen(currentUser));
         } else {
@@ -186,16 +228,17 @@ public class ImportClassScheduleScreen extends Screen {
         int r = fileChooser.showDialog(this, "Chọn file");
         if (r == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            fileLbl.setText(file.getAbsolutePath());
-            buildTableItem(CSVReader.getList(file));
+            fileLbl.setText(Helper.getPath(file.getAbsolutePath()));
+            buildTableItem(csList = CSVReader.getClassSchList(file),subjectList = CSVReader.getSubjectList(file));
         }
     }
 
-    void buildTableItem(List<Student> studentList) {
-        model.setRowCount(0);
+    void buildTableItem(List<ClassSchedule> studentList, List<Subject> subjectList) {
+        tableModel.setRowCount(0);
         for (int i = 0; i < studentList.size(); i++) {
-            Student s = studentList.get(i);
-            model.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
+            ClassSchedule cs = studentList.get(i);
+            Subject s = subjectList.get(i);
+            tableModel.addRow(new Object[]{"" + i, s.getId(), s.getName(), cs.getClassroom(), "-"});
         }
     }
 
@@ -215,7 +258,7 @@ public class ImportClassScheduleScreen extends Screen {
     private javax.swing.JTable table;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JScrollPane tableScrollPanel;
-    private DefaultTableModel model = new DefaultTableModel();
+    private DefaultTableModel tableModel;
     private DefaultComboBoxModel<String> classModel = new DefaultComboBoxModel<>();
     private JButton submitBtn = new JButton();
 }

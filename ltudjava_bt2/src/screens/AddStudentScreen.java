@@ -1,5 +1,6 @@
 package screens;
 
+import hibernate.dao.ClassScheduleDAO;
 import hibernate.dao.IClassDAO;
 import hibernate.dao.StudentDAO;
 import hibernate.java.Account;
@@ -11,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddStudentScreen extends Screen {
     Account currentUser;
@@ -35,7 +37,15 @@ public class AddStudentScreen extends Screen {
             classModel.addElement(iClass.getClassID());
         }
 
+        reloadSubjectModel();
+    }
+    private void reloadSubjectModel(){
+        subjectModel.removeAllElements();
         subjectModel.addElement("----");
+        String classID = (String)classIDComboBox.getSelectedItem();
+        ClassScheduleDAO.getList().stream()
+                .filter((cs)->cs.getClassID().equals(classID))
+                .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
     }
 
     private void initComponents() {
@@ -60,7 +70,12 @@ public class AddStudentScreen extends Screen {
         subComboBox = new javax.swing.JComboBox<>();
         tablePanel = new javax.swing.JPanel();
         tableScrollPanel = new javax.swing.JScrollPane();
-        tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return !(column == 0 || column == 5);
+            }
+        };
         table = new javax.swing.JTable(tableModel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,6 +109,12 @@ public class AddStudentScreen extends Screen {
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
+        classIDComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                classIDComboBoxActionPerformed(e);
+            }
+        });
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
@@ -184,7 +205,9 @@ public class AddStudentScreen extends Screen {
 
         pack();
     }
-
+    private void classIDComboBoxActionPerformed(ActionEvent evt) {
+        reloadSubjectModel();
+    }
     private void addBtnActionPerformed(ActionEvent e) {
         tableModel.addRow(new Object[]{"" + tableModel.getRowCount() + 1, null, null, null, null,"-"});
     }

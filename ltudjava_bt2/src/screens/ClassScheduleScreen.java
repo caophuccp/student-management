@@ -1,11 +1,18 @@
 package screens;
 
+import hibernate.dao.ClassScheduleDAO;
+import hibernate.dao.IClassDAO;
+import hibernate.dao.StudentLOSDAO;
 import hibernate.java.Account;
+import hibernate.java.ClassSchedule;
+import hibernate.java.IClass;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClassScheduleScreen extends Screen{
     Account currentUser;
@@ -15,20 +22,31 @@ public class ClassScheduleScreen extends Screen{
         setLocationRelativeTo(null);
         setVisible(true);
 
+        table.setEnabled(false);
         tableModel.addColumn("STT");
         tableModel.addColumn("Mã Môn");
         tableModel.addColumn("Tên Môn");
         tableModel.addColumn("Phòng Học");
 
-        classModel.addElement("18_1");
-        classModel.addElement("18_2");
-        classModel.addElement("18_3");
-        classModel.addElement("18_4");
+        List<IClass> il = IClassDAO.getList();
+        if (il.isEmpty()) {
+            classModel.addElement("----");
+        }
+        for (IClass iClass : il) {
+            classModel.addElement(iClass.getClassID());
+        }
 
-        subjectModel.addElement("CT01");
-        subjectModel.addElement("CT02");
-        subjectModel.addElement("CT03");
-        subjectModel.addElement("CT04");
+        reloadSubjectModel();
+    }
+
+    private void reloadSubjectModel(){
+        subjectModel.removeAllElements();
+        subjectModel.addElement("----");
+        String classID = (String)classIDComboBox.getSelectedItem();
+        ClassScheduleDAO.getList().stream()
+                .filter((cs)->cs.getClassID().equals(classID))
+                .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
+
     }
 
     private void initComponents() {
@@ -83,15 +101,28 @@ public class ClassScheduleScreen extends Screen{
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
+        classIDComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reloadSubjectModel();
+                reloadData();
+            }
+        });
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
 
-        subLbl.setText("Mon Hoc");
+        subLbl.setText("Môn Học");
         subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
+        subComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reloadData();
+            }
+        });
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);
@@ -150,6 +181,23 @@ public class ClassScheduleScreen extends Screen{
         } else {
             changeScreen(new SVHomeScreen(currentUser));
         }
+    }
+
+    void reloadData(){
+        String classID = (String) classIDComboBox.getSelectedItem();
+        String subjectID = (String) subComboBox.getSelectedItem();
+//        List<ClassSchedule> l = ClassScheduleDAO.getList().stream()
+//                .filter((cs)-> cs.getClassID().equals(classID) && ("----".equals(subjectID)
+//                        || cs.getSubjectID().equals(subjectID))).collect(Collectors.toList());
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        if (subjectID != null && !"----".equals(subjectID)) query += "and CS.subjectID = '" + subjectID + "'";
+        List<ClassSchedule> l = ClassScheduleDAO.getList(query);
+        tableModel.setRowCount(0);
+        for (int i = 0; i < l.size(); i++) {
+            ClassSchedule cs = l.get(i);
+            tableModel.addRow(new Object[]{"" + (i + 1), cs.getSubjectID(), cs.getClassID(), cs.getClassroom()});
+        }
+
     }
 
     private JPanel appBarPanel;

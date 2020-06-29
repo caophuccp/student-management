@@ -10,6 +10,7 @@ public class Score implements Serializable {
     Float ck;
     Float khac;
     Float tong;
+    String studentName;
 
     public Score() {
         this.studentID = null;
@@ -18,9 +19,10 @@ public class Score implements Serializable {
         this.ck = null;
         this.khac = null;
         this.tong = null;
+        this.studentName = null;
     }
 
-    public Score(String studentID, String classID, String subjectID, Float gk, Float ck, Float khac, Float tong) {
+    public Score(String studentID, String studentName, String classID, String subjectID, Float gk, Float ck, Float khac, Float tong) {
         this.studentID = studentID;
         this.classID = classID;
         this.subjectID = subjectID;
@@ -28,6 +30,7 @@ public class Score implements Serializable {
         this.ck = ck;
         this.khac = khac;
         this.tong = tong;
+        this.studentName = studentName;
     }
 
     public String getStudentID() {
@@ -84,6 +87,14 @@ public class Score implements Serializable {
 
     public void setTong(Float tong) {
         this.tong = tong;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     @Override

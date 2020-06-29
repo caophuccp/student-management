@@ -52,11 +52,30 @@ public class StudentDAO {
         return true;
     }
 
-    public static List<Student> getList(){
+    public static boolean update(Student s) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        if (getStudent(s.getStudentID()) == null) {
+            return false;
+        }
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.update(s);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+    public static List<Student> getList(String query){
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<Student> list = null;
         try {
-            list = session.createQuery("from hibernate.java.Student").list();
+            list = session.createQuery(query).list();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,5 +83,9 @@ public class StudentDAO {
             session.close();
         }
         return list;
+    }
+
+    public static List<Student> getList(){
+        return getList("from hibernate.java.Student");
     }
 }
