@@ -20,5 +20,8 @@
         <property name="idCardNo" type="string">
             <column length="9" name="CMND"/>
         </property>
+        <property name="classID" type="string">
+            <column length="5" name="MaLop"/>
+        </property>
     </class>
 </hibernate-mapping>

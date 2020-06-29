@@ -21,7 +21,7 @@ public class CSVReader {
             line = in.readLine();
             while (line != null) {
                 tps = line.split(",");
-                Student s = new Student(tps[1], tps[2], tps[3], tps[4]);
+                Student s = new Student(tps[1], tps[2], tps[3], tps[4], "");
                 list.add(s);
                 line = in.readLine();
             }

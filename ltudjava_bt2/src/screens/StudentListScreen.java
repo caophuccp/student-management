@@ -1,11 +1,18 @@
 package screens;
 
+import hibernate.dao.IClassDAO;
+import hibernate.dao.StudentDAO;
 import hibernate.java.Account;
+import hibernate.java.IClass;
+import hibernate.java.Student;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class StudentListScreen extends Screen{
     Account currentUser;
@@ -21,15 +28,14 @@ public class StudentListScreen extends Screen{
         tableModel.addColumn("Giới Tính");
         tableModel.addColumn("CMND");
 
-        classModel.addElement("18_1");
-        classModel.addElement("18_2");
-        classModel.addElement("18_3");
-        classModel.addElement("18_4");
-
-        subjectModel.addElement("CT01");
-        subjectModel.addElement("CT02");
-        subjectModel.addElement("CT03");
-        subjectModel.addElement("CT04");
+        List<IClass> il = IClassDAO.getList();
+        if (il.isEmpty()) {
+            classModel.addElement("----");
+        }
+        for (IClass iClass : il) {
+            classModel.addElement(iClass.getClassID());
+        }
+        subjectModel.addElement("----");
     }
 
     private void initComponents() {
@@ -84,6 +90,12 @@ public class StudentListScreen extends Screen{
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
+        classIDComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                classIDComboBoxActionPerformed(e);
+            }
+        });
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
@@ -93,6 +105,12 @@ public class StudentListScreen extends Screen{
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
+        subComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                subComboBoxActionPerformed(e);
+            }
+        });
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);
@@ -143,6 +161,19 @@ public class StudentListScreen extends Screen{
         );
 
         pack();
+    }
+    private void classIDComboBoxActionPerformed(ActionEvent evt) {
+        String ci = (String)classIDComboBox.getSelectedItem();
+        List<Student> studentList = StudentDAO.getList().stream()
+                .filter((s)->s.getClassID().equals(ci)).collect(Collectors.toList());
+        tableModel.setRowCount(0);
+        for (int i = 0; i < studentList.size(); i++) {
+            Student s = studentList.get(i);
+            tableModel.addRow(new Object[]{"" + i, s.getClassID(), s.getName(), s.getGender(), s.getIdCardNo()});
+        }
+    }
+
+    private void subComboBoxActionPerformed(ActionEvent evt) {
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {

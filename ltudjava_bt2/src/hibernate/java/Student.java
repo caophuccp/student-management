@@ -5,19 +5,21 @@ public class Student implements java.io.Serializable {
     String name;
     String gender;
     String idCardNo;
+    String classID;
 
-    public Student(String studentID, String name, String gender, String idCardNo) {
+    public Student(String studentID, String name, String gender, String idCardNo, String classID) {
         this.studentID = studentID;
         this.name = name;
         this.gender = gender;
         this.idCardNo = idCardNo;
+        this.classID = classID;
     }
 
     public Student() {
-        this.studentID = "";
-        this.name = "";
-        this.gender = "";
-        this.idCardNo = "";
+        this.studentID = null;
+        this.name = null;
+        this.gender = null;
+        this.idCardNo = null;
     }
 
     @Override
@@ -60,5 +62,13 @@ public class Student implements java.io.Serializable {
 
     public void setIdCardNo(String idCardNo) {
         this.idCardNo = idCardNo;
+    }
+
+    public String getClassID() {
+        return classID;
+    }
+
+    public void setClassID(String classID) {
+        this.classID = classID;
     }
 }

@@ -1,31 +1,40 @@
 package screens;
 
 import CSV.CSVReader;
+import hibernate.dao.IClassDAO;
+import hibernate.dao.StudentDAO;
 import hibernate.java.Account;
+import hibernate.java.IClass;
 import hibernate.java.Student;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 
 public class ImportClassScreen extends Screen {
     Account currentUser;
+
     public ImportClassScreen(Account currentUser) {
         this.currentUser = currentUser;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);
 
-        model.addColumn("STT");
-        model.addColumn("MSSV");
-        model.addColumn("Họ Tên");
-        model.addColumn("Giới Tính");
-        model.addColumn("CMND");
+        tableModel.addColumn("STT");
+        tableModel.addColumn("MSSV");
+        tableModel.addColumn("Họ Tên");
+        tableModel.addColumn("Giới Tính");
+        tableModel.addColumn("CMND");
+        tableModel.addColumn("Trạng Thái");
+
     }
 
     private void initComponents() {
@@ -44,8 +53,7 @@ public class ImportClassScreen extends Screen {
         fileLbl = new javax.swing.JLabel();
         tablePanel = new javax.swing.JPanel();
         tableScrollPanel = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable(model);
-
+        table = new javax.swing.JTable(tableModel);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         backBtn.setText("huy");
@@ -66,7 +74,7 @@ public class ImportClassScreen extends Screen {
         });
         appBarPanel.add(submitBtn);
 
-        backBtn.setText("huy");
+        backBtn.setText("Huỷ");
         appBarPanel.add(backBtn);
 
 
@@ -162,7 +170,38 @@ public class ImportClassScreen extends Screen {
     }
 
     private void submitBtnActionPerformed(ActionEvent evt) {
+        if (classIDTxf.getText().isEmpty() || tableModel.getRowCount() == 0) {
+            return;
+        }
+        int n = tableModel.getRowCount();
+        String id;
+        String name;
+        String gender;
+        String idcard;
+        String classID = classIDTxf.getText();
+        IClassDAO.add(new IClass(classID));
+        boolean error = false;
+        for (int i = 0; i < n; i++) {
+            id = (String) tableModel.getValueAt(i, 1);
+            name = (String) tableModel.getValueAt(i, 2);
+            gender = (String) tableModel.getValueAt(i, 3);
+            idcard = (String) tableModel.getValueAt(i, 4);
+            Student s = new Student(id, name, gender, idcard, classID);
+            if (!StudentDAO.addStudent(s)) {
+                error = true;
+                tableModel.setValueAt("F", i, 5);
+            } else {
+                tableModel.setValueAt("T", i, 5);
+            }
+        }
 
+        if (!error) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thành Công","Message",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {
@@ -187,10 +226,11 @@ public class ImportClassScreen extends Screen {
     }
 
     void buildTableItem(List<Student> studentList) {
-        model.setRowCount(0);
+        tableModel.setRowCount(0);
+
         for (int i = 0; i < studentList.size(); i++) {
             Student s = studentList.get(i);
-            model.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
+            tableModel.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo(),"-"});
         }
     }
 
@@ -210,196 +250,8 @@ public class ImportClassScreen extends Screen {
     private javax.swing.JTable table;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JScrollPane tableScrollPanel;
-    private DefaultTableModel model = new DefaultTableModel();
+    private DefaultTableModel tableModel = new DefaultTableModel();
+//    private DefaultTableCellRenderer tableCellRenderer;
     private JButton submitBtn = new JButton();
-    // End of variables declaration                   
-}
 
-//public class ImportScreen extends Screen {
-//
-//    /**
-//     * Creates new form ImportScreen
-//     */
-//    public ImportScreen() {
-//        initComponents();
-//        setLocationRelativeTo(null);
-//        setVisible(true);
-//    }
-//
-//    private void initComponents() {
-//
-//        appBarPanel = new javax.swing.JPanel();
-//        backBtn = new javax.swing.JButton();
-//        jSeparator1 = new javax.swing.JSeparator();
-//        bodyPanel = new javax.swing.JPanel();
-//        optPanel = new javax.swing.JPanel();
-//        classIDPanel = new javax.swing.JPanel();
-//        classIDLbl = new javax.swing.JLabel();
-//        classIDTxf = new javax.swing.JTextField();
-//        fileChooserPanel = new javax.swing.JPanel();
-//        fileChooserBtn = new javax.swing.JButton();
-//        fileLbl = new javax.swing.JLabel();
-//        tablePanel = new javax.swing.JPanel();
-//        scrollTablePanel = new javax.swing.JScrollPane();
-//        table = new javax.swing.JTable(model);
-//
-//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-//
-//        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
-//
-//        backBtn.setText("huy");
-//        appBarPanel.add(backBtn);
-//
-//        classIDLbl.setText("Ma LOP");
-//        classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
-//        classIDPanel.add(classIDLbl);
-//
-//        classIDTxf.setPreferredSize(new java.awt.Dimension(90, 30));
-//        classIDPanel.add(classIDTxf);
-//
-//        fileChooserBtn.setText("Chon file");
-//        fileChooserBtn.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                fileChooserBtnActionPerformed(evt);
-//            }
-//        });
-//
-//        fileLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-//
-//        javax.swing.GroupLayout fileChooserPanelLayout = new javax.swing.GroupLayout(fileChooserPanel);
-//        fileChooserPanel.setLayout(fileChooserPanelLayout);
-//        fileChooserPanelLayout.setHorizontalGroup(
-//                fileChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(fileChooserPanelLayout.createSequentialGroup()
-//                                .addComponent(fileLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addContainerGap())
-//                        .addGroup(fileChooserPanelLayout.createSequentialGroup()
-//                                .addGap(133, 133, 133)
-//                                .addComponent(fileChooserBtn)
-//                                .addContainerGap(139, Short.MAX_VALUE))
-//        );
-//        fileChooserPanelLayout.setVerticalGroup(
-//                fileChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(fileChooserPanelLayout.createSequentialGroup()
-//                                .addComponent(fileChooserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(0, 0, 0)
-//                                .addComponent(fileLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-//        );
-//
-//        javax.swing.GroupLayout optPanelLayout = new javax.swing.GroupLayout(optPanel);
-//        optPanel.setLayout(optPanelLayout);
-//        optPanelLayout.setHorizontalGroup(
-//                optPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(optPanelLayout.createSequentialGroup()
-//                                .addContainerGap()
-//                                .addComponent(classIDPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addComponent(fileChooserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(194, 194, 194))
-//        );
-//        optPanelLayout.setVerticalGroup(
-//                optPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optPanelLayout.createSequentialGroup()
-//                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addComponent(classIDPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(52, 52, 52))
-//                        .addGroup(optPanelLayout.createSequentialGroup()
-//                                .addContainerGap()
-//                                .addComponent(fileChooserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addGap(31, 31, 31))
-//        );
-//
-//        javax.swing.GroupLayout bodyPanelLayout = new javax.swing.GroupLayout(bodyPanel);
-//        bodyPanel.setLayout(bodyPanelLayout);
-//        bodyPanelLayout.setHorizontalGroup(
-//                bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(bodyPanelLayout.createSequentialGroup()
-//                                .addComponent(optPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(0, 0, Short.MAX_VALUE))
-//        );
-//        bodyPanelLayout.setVerticalGroup(
-//                bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(bodyPanelLayout.createSequentialGroup()
-//                                .addComponent(optPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-//        );
-//
-//        tablePanel.setLayout(new javax.swing.BoxLayout(tablePanel, javax.swing.BoxLayout.LINE_AXIS));
-////
-//        model.addColumn("STT");
-//        model.addColumn("MSSV");
-//        model.addColumn("Họ Tên");
-//        model.addColumn("Giới Tính");
-//        model.addColumn("CMND");
-//        scrollTablePanel.setViewportView(table);
-//
-//        tablePanel.add(scrollTablePanel);
-//
-//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-//        getContentPane().setLayout(layout);
-//        layout.setHorizontalGroup(
-//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addComponent(appBarPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-//                        .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                        .addGroup(layout.createSequentialGroup()
-//                                .addContainerGap()
-//                                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addContainerGap())
-//        );
-//        layout.setVerticalGroup(
-//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(layout.createSequentialGroup()
-//                                .addComponent(appBarPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(2, 2, 2)
-//                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//                                .addComponent(bodyPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(5, 5, 5))
-//        );
-//
-//        pack();
-//    }
-//
-//
-//    private void fileChooserBtnActionPerformed(java.awt.event.ActionEvent evt) {
-//
-//        // TODO add your handling code here:
-//        JFileChooser fileChooser = new JFileChooser();
-//        FileNameExtensionFilter f = new FileNameExtensionFilter("csv", "csv");
-//        fileChooser.setFileFilter(f);
-//        fileChooser.setMultiSelectionEnabled(false);
-//        int r = fileChooser.showDialog(this, "Chọn file");
-//        if (r == JFileChooser.APPROVE_OPTION) {
-//            File file = fileChooser.getSelectedFile();
-//            fileLbl.setText(file.getAbsolutePath());
-//            buildTableItem(CSVReader.getList(file));
-//        }
-//    }
-//
-//    void buildTableItem(List<Student> studentList){
-//        model.setRowCount(0);
-//        for (int i = 0; i < studentList.size(); i++) {
-//            Student s = studentList.get(i);
-//            model.addRow(new Object[]{"" + i, s.getStudentID(),s.getName(), s.getGender(), s.getIdCardNo()});
-//        }
-//    }
-//    private javax.swing.JPanel appBarPanel;
-//    private javax.swing.JButton backBtn;
-//    private javax.swing.JPanel bodyPanel;
-//    private javax.swing.JLabel classIDLbl;
-//    private javax.swing.JPanel classIDPanel;
-//    private javax.swing.JTextField classIDTxf;
-//    private javax.swing.JButton fileChooserBtn;
-//    private javax.swing.JPanel fileChooserPanel;
-//    private javax.swing.JLabel fileLbl;
-//    private javax.swing.JSeparator jSeparator1;
-//    private javax.swing.JPanel optPanel;
-//    private javax.swing.JScrollPane scrollTablePanel;
-//    private javax.swing.JTable table;
-//    private javax.swing.JPanel tablePanel;
-//    private DefaultTableModel model = new DefaultTableModel();
-//    // End of variables declaration
-//}
+}

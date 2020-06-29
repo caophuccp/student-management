@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 8, 2020 10:30:36 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class catalog="dbqlsv" name="hibernate.java.Score" optimistic-lock="version" table="Diem">
+
+        <composite-id>
+            <key-property name="studentID" length="9" column="MSSV" type="string"/>
+            <key-property name="classID" length="5" type="string" column="MaLop"/>
+            <key-property name="subjectID" length="6" type="string" column="MaMon"/>
+        </composite-id>
+        <property name="gk" type="java.lang.Float">
+            <column name="DiemGK"/>
+        </property>
+        <property name="ck" type="java.lang.Float">
+            <column name="DiemCK"/>
+        </property>
+        <property name="khac" type="java.lang.Float">
+            <column name="DiemKhac"/>
+        </property>
+        <property name="tong" type="java.lang.Float">
+            <column name="DiemTong"/>
+        </property>
+
+    </class>
+</hibernate-mapping>

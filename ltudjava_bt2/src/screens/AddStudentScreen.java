@@ -1,15 +1,20 @@
 package screens;
 
+import hibernate.dao.IClassDAO;
+import hibernate.dao.StudentDAO;
 import hibernate.java.Account;
+import hibernate.java.IClass;
+import hibernate.java.Student;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
-public class AddStudentScreen extends Screen{
+public class AddStudentScreen extends Screen {
     Account currentUser;
+
     public AddStudentScreen(Account currentUser) {
         this.currentUser = currentUser;
         initComponents();
@@ -21,16 +26,16 @@ public class AddStudentScreen extends Screen{
         tableModel.addColumn("Họ Tên");
         tableModel.addColumn("Giới Tính");
         tableModel.addColumn("CMND");
+        tableModel.addColumn("Trạng Thái");
+        List<IClass> il = IClassDAO.getList();
+        if (il.isEmpty()) {
+            classModel.addElement("----");
+        }
+        for (IClass iClass : il) {
+            classModel.addElement(iClass.getClassID());
+        }
 
-        classModel.addElement("18_1");
-        classModel.addElement("18_2");
-        classModel.addElement("18_3");
-        classModel.addElement("18_4");
-
-        subjectModel.addElement("CT01");
-        subjectModel.addElement("CT02");
-        subjectModel.addElement("CT03");
-        subjectModel.addElement("CT04");
+        subjectModel.addElement("----");
     }
 
     private void initComponents() {
@@ -95,6 +100,7 @@ public class AddStudentScreen extends Screen{
 
         subLbl.setText("Mon Hoc");
         subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
@@ -102,12 +108,24 @@ public class AddStudentScreen extends Screen{
 
         optPanel.add(subPanel);
 
-        addStudentBtn.setText("them sinh vien");
+        addStudentBtn.setText("Thêm Sinh Viên");
         addStudentBtn.setPreferredSize(new java.awt.Dimension(140, 40));
+        addStudentBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addBtnActionPerformed(e);
+            }
+        });
         btnPanel.add(addStudentBtn);
 
-        submitBtn.setText("Luu thay doi");
+        submitBtn.setText("Lưu Thay Đổi");
         submitBtn.setPreferredSize(new java.awt.Dimension(140, 40));
+        submitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitBtnActionPerformed(e);
+            }
+        });
         btnPanel.add(submitBtn);
 
 
@@ -165,6 +183,45 @@ public class AddStudentScreen extends Screen{
         );
 
         pack();
+    }
+
+    private void addBtnActionPerformed(ActionEvent e) {
+        tableModel.addRow(new Object[]{"" + tableModel.getRowCount() + 1, null, null, null, null,"-"});
+    }
+
+    private void submitBtnActionPerformed(ActionEvent e) {
+        if (tableModel.getRowCount() == 0) {
+            return;
+        }
+        int n = tableModel.getRowCount();
+        String id;
+        String name;
+        String gender;
+        String idcard;
+        String classID = (String)classIDComboBox.getSelectedItem();
+        IClassDAO.add(new IClass(classID));
+        boolean error = false;
+        for (int i = 0; i < n; i++) {
+            id = (String) tableModel.getValueAt(i, 1);
+            name = (String) tableModel.getValueAt(i, 2);
+            gender = (String) tableModel.getValueAt(i, 3);
+            idcard = (String) tableModel.getValueAt(i, 4);
+            Student s = new Student(id, name, gender, idcard, classID);
+            if (!StudentDAO.addStudent(s)) {
+                error = true;
+                tableModel.setValueAt("F", i, 5);
+            } else {
+                tableModel.setValueAt("T", i, 5);
+            }
+        }
+
+        if (!error) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thành Công","Message",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {
