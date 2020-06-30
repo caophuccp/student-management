@@ -51,15 +51,22 @@ public class StudentListScreen extends Screen{
                 .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
     }
 
-    private void reloadData(){
+    private String getStudentSelectQuery(){
         String ci = (String)classIDComboBox.getSelectedItem();
         String si = (String)subComboBox.getSelectedItem();
+        if ("----".equals(si)) return "from hibernate.java.Student S where S.classID = '" + ci + "'";
         String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '" + ci + "'";
-        if (si != null && !"----".equals(si)) query += "and SLOS.subjectID = '" + si + "')";
+        if (si != null) query += "and SLOS.subjectID = '" + si + "')";
         else query += ")";
 
         query = "from hibernate.java.Student S where S.studentID in " + query;
+        return query;
+    }
+    private void reloadData(){
+
+        String query = getStudentSelectQuery();
         List<Student> studentList = StudentDAO.getList(query);
+
         tableModel.setRowCount(0);
         for (int i = 0; i < studentList.size(); i++) {
             Student s = studentList.get(i);
@@ -89,42 +96,18 @@ public class StudentListScreen extends Screen{
         table = new javax.swing.JTable(tableModel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                backBtnActionPerformed(e);
-            }
-        });
-
-        javax.swing.GroupLayout appBarPanelLayout = new javax.swing.GroupLayout(appBarPanel);
-        appBarPanel.setLayout(appBarPanelLayout);
-        appBarPanelLayout.setHorizontalGroup(
-                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(backBtn))
-        );
-        appBarPanelLayout.setVerticalGroup(
-                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(backBtn)
-                                .addContainerGap())
-        );
+        backBtn.addActionListener(this::backBtnActionPerformed);
+        appBarPanel.add(backBtn);
 
         classIDLbl.setText("Mã Lớp");
         classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
-        classIDComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                classIDComboBoxActionPerformed(e);
-            }
-        });
+        classIDComboBox.addActionListener(this::classIDComboBoxActionPerformed);
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
@@ -134,12 +117,7 @@ public class StudentListScreen extends Screen{
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
-        subComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                subComboBoxActionPerformed(e);
-            }
-        });
+        subComboBox.addActionListener(this::subComboBoxActionPerformed);
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);

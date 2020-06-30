@@ -9,6 +9,7 @@ import hibernate.java.Student;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -79,6 +80,7 @@ public class AddStudentScreen extends Screen {
         table = new javax.swing.JTable(tableModel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
         backBtn.addActionListener(new ActionListener() {
@@ -87,22 +89,23 @@ public class AddStudentScreen extends Screen {
                 backBtnActionPerformed(e);
             }
         });
+        appBarPanel.add(backBtn);
 
-        javax.swing.GroupLayout appBarPanelLayout = new javax.swing.GroupLayout(appBarPanel);
-        appBarPanel.setLayout(appBarPanelLayout);
-        appBarPanelLayout.setHorizontalGroup(
-                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(backBtn))
-        );
-        appBarPanelLayout.setVerticalGroup(
-                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(backBtn)
-                                .addContainerGap())
-        );
+//        javax.swing.GroupLayout appBarPanelLayout = new javax.swing.GroupLayout(appBarPanel);
+//        appBarPanel.setLayout(appBarPanelLayout);
+//        appBarPanelLayout.setHorizontalGroup(
+//                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
+//                                .addGap(0, 0, Short.MAX_VALUE)
+//                                .addComponent(backBtn))
+//        );
+//        appBarPanelLayout.setVerticalGroup(
+//                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
+//                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                                .addComponent(backBtn)
+//                                .addContainerGap())
+//        );
 
         classIDLbl.setText("Mã Lớp");
         classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));

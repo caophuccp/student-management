@@ -107,7 +107,7 @@ public class TCHomeScreen extends Screen {
         topBar.setLayout(flowLayout1);
 
         accBtn.setText("Đổi Mật Khẩu");
-        accBtn.setPreferredSize(new Dimension(100,40));
+        accBtn.setPreferredSize(new Dimension(120,40));
         accBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,7 +117,7 @@ public class TCHomeScreen extends Screen {
         topBar.add(accBtn);
 
         logoutBtn.setText("Đăng Xuất");
-        logoutBtn.setPreferredSize(new Dimension(100,40));
+        logoutBtn.setPreferredSize(new Dimension(120,40));
         logoutBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

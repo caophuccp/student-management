@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class CSVReader {
     public static List<Student> getStudentList(File file) {
         List<Student> list = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line = in.readLine();
             String[] tps = line.split(",");
             if (tps.length != 5) return list;
@@ -36,7 +37,7 @@ public class CSVReader {
     public static List<ClassSchedule> getClassSchList(File file) {
         List<ClassSchedule> list = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line = in.readLine();
             String[] tps = line.split(",");
             if (tps.length != 4) return list;
@@ -56,7 +57,7 @@ public class CSVReader {
     public static List<Subject> getSubjectList(File file) {
         List<Subject> list = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line = in.readLine();
             String[] tps = line.split(",");
             if (tps.length != 4) return list;
@@ -77,7 +78,7 @@ public class CSVReader {
 
         List<Score> list = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line = in.readLine();
             String[] tps = line.split(",");
             if (tps.length != 7) return list;
