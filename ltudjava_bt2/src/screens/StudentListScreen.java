@@ -54,17 +54,16 @@ public class StudentListScreen extends Screen{
     private String getStudentSelectQuery(){
         String ci = (String)classIDComboBox.getSelectedItem();
         String si = (String)subComboBox.getSelectedItem();
-        if ("----".equals(si)) return "from hibernate.java.Student S where S.classID = '" + ci + "'";
-        String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '" + ci + "'";
-        if (si != null) query += "and SLOS.subjectID = '" + si + "')";
-        else query += ")";
-
+        if (si == null || "----".equals(si)) return "from hibernate.java.Student S where S.classID = '" + ci + "'";
+        String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '"
+                + ci + "' and SLOS.subjectID = '" + si + "')";
         query = "from hibernate.java.Student S where S.studentID in " + query;
         return query;
     }
     private void reloadData(){
 
         String query = getStudentSelectQuery();
+        System.out.println(query);
         List<Student> studentList = StudentDAO.getList(query);
 
         tableModel.setRowCount(0);

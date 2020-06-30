@@ -17,60 +17,22 @@ public class TCHomeScreen extends Screen {
         btn1.setText("Thêm Danh Sách Lớp");
         btn2.setText("Xem Danh Sách Lớp");
         btn3.setText("Thêm Sinh Viên");
-        btn4.setText("Nhập Thời Khoá Biểu");
-        btn5.setText("Xem Thời Khoá Biểu");
-        btn6.setText("Nhập Bảng Điểm");
-        btn7.setText("Xem Bảng Điểm");
-        btn8.setText("Sửa Điểm");
-        btn9.setText("jButton1");
-        btn1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                importStudentList();
-            }
-        });
-        btn2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dsClass();
-            }
-        });
-        btn3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addStudent();
-            }
-        });
-        btn4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                importClassSchedule();
-            }
-        });
-        btn5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dsClassSchedule();
-            }
-        });
-        btn6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                importATranscript();
-            }
-        });
-        btn7.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                academicTranscript();
-            }
-        });
-        btn8.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fixAcademicTranscript();
-            }
-        });
+        btn4.setText("Xoá Sinh Viên");
+        btn5.setText("Nhập Thời Khoá Biểu");
+        btn6.setText("Xem Thời Khoá Biểu");
+        btn7.setText("Nhập Bảng Điểm");
+        btn8.setText("Xem Bảng Điểm");
+        btn9.setText("Sửa Điểm");
+
+        btn1.addActionListener(e -> importStudentList());
+        btn2.addActionListener(e -> dsClass());
+        btn3.addActionListener(e -> addStudent());
+        btn4.addActionListener(e -> removeStudent());
+        btn5.addActionListener(e -> importClassSchedule());
+        btn6.addActionListener(e -> dsClassSchedule());
+        btn7.addActionListener(e -> importScore());
+        btn8.addActionListener(e -> scoreTable());
+        btn9.addActionListener(e -> fixScore());
     }
     private void initComponents() {
 
@@ -200,14 +162,18 @@ public class TCHomeScreen extends Screen {
         pack();
     }
 
-    private void fixAcademicTranscript(){
+    private void removeStudent(){
+        changeScreen(new RemoveStudentScreen(currentUser));
+    }
+
+    private void fixScore(){
         changeScreen(new FixScoreScreen(currentUser));
     }
 
-    private void academicTranscript(){
+    private void scoreTable(){
         changeScreen(new ScoreTableScreen(currentUser));
     }
-    private void importATranscript(){
+    private void importScore(){
         changeScreen(new ImportScoreTableScreen(currentUser));
     }
     private void dsClassSchedule(){

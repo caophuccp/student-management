@@ -3,9 +3,11 @@ package screens;
 import hibernate.dao.ClassScheduleDAO;
 import hibernate.dao.IClassDAO;
 import hibernate.dao.StudentDAO;
+import hibernate.dao.StudentLOSDAO;
 import hibernate.java.Account;
 import hibernate.java.IClass;
 import hibernate.java.Student;
+import hibernate.java.StudentLOS;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -40,13 +42,14 @@ public class AddStudentScreen extends Screen {
 
         reloadSubjectModel();
     }
-    private void reloadSubjectModel(){
+
+    private void reloadSubjectModel() {
         subjectModel.removeAllElements();
         subjectModel.addElement("----");
-        String classID = (String)classIDComboBox.getSelectedItem();
+        String classID = (String) classIDComboBox.getSelectedItem();
         ClassScheduleDAO.getList().stream()
-                .filter((cs)->cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
+                .filter((cs) -> cs.getClassID().equals(classID))
+                .collect(Collectors.toList()).forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
     private void initComponents() {
@@ -71,7 +74,7 @@ public class AddStudentScreen extends Screen {
         subComboBox = new javax.swing.JComboBox<>();
         tablePanel = new javax.swing.JPanel();
         tableScrollPanel = new javax.swing.JScrollPane();
-        tableModel = new DefaultTableModel(){
+        tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return !(column == 0 || column == 5);
@@ -83,41 +86,15 @@ public class AddStudentScreen extends Screen {
         appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                backBtnActionPerformed(e);
-            }
-        });
+        backBtn.addActionListener(this::backBtnActionPerformed);
         appBarPanel.add(backBtn);
-
-//        javax.swing.GroupLayout appBarPanelLayout = new javax.swing.GroupLayout(appBarPanel);
-//        appBarPanel.setLayout(appBarPanelLayout);
-//        appBarPanelLayout.setHorizontalGroup(
-//                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-//                                .addGap(0, 0, Short.MAX_VALUE)
-//                                .addComponent(backBtn))
-//        );
-//        appBarPanelLayout.setVerticalGroup(
-//                appBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-//                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addComponent(backBtn)
-//                                .addContainerGap())
-//        );
 
         classIDLbl.setText("Mã Lớp");
         classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
-        classIDComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                classIDComboBoxActionPerformed(e);
-            }
-        });
+        classIDComboBox.addActionListener(this::classIDComboBoxActionPerformed);
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
@@ -134,22 +111,12 @@ public class AddStudentScreen extends Screen {
 
         addStudentBtn.setText("Thêm Sinh Viên");
         addStudentBtn.setPreferredSize(new java.awt.Dimension(140, 40));
-        addStudentBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addBtnActionPerformed(e);
-            }
-        });
+        addStudentBtn.addActionListener(this::addBtnActionPerformed);
         btnPanel.add(addStudentBtn);
 
         submitBtn.setText("Lưu Thay Đổi");
         submitBtn.setPreferredSize(new java.awt.Dimension(140, 40));
-        submitBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                submitBtnActionPerformed(e);
-            }
-        });
+        submitBtn.addActionListener(this::submitBtnActionPerformed);
         btnPanel.add(submitBtn);
 
 
@@ -208,11 +175,13 @@ public class AddStudentScreen extends Screen {
 
         pack();
     }
+
     private void classIDComboBoxActionPerformed(ActionEvent evt) {
         reloadSubjectModel();
     }
+
     private void addBtnActionPerformed(ActionEvent e) {
-        tableModel.addRow(new Object[]{"" + tableModel.getRowCount() + 1, null, null, null, null,"-"});
+        tableModel.addRow(new Object[]{"" + tableModel.getRowCount() + 1, null, null, null, null, "-"});
     }
 
     private void submitBtnActionPerformed(ActionEvent e) {
@@ -224,8 +193,11 @@ public class AddStudentScreen extends Screen {
         String name;
         String gender;
         String idcard;
-        String classID = (String)classIDComboBox.getSelectedItem();
-        IClassDAO.add(new IClass(classID));
+        String classID = (String) classIDComboBox.getSelectedItem();
+        String subjectID = (String) subjectModel.getSelectedItem();
+        boolean bs = true;
+        if (subjectID == null || "----".equals(subjectID)) bs = false;
+
         boolean error = false;
         for (int i = 0; i < n; i++) {
             id = (String) tableModel.getValueAt(i, 1);
@@ -239,14 +211,19 @@ public class AddStudentScreen extends Screen {
             } else {
                 tableModel.setValueAt("T", i, 5);
             }
+
+            if (bs) {
+                StudentLOS los = new StudentLOS(id, classID, subjectID);
+                StudentLOSDAO.add(los);
+            }
         }
 
         if (!error) {
             JOptionPane.showMessageDialog(new JFrame(),
-                    "Thêm Thành Công","Message",JOptionPane.INFORMATION_MESSAGE);
+                    "Thêm Thành Công", "Message", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(new JFrame(),
-                    "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
+                    "Thêm Thất Bại", "Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

@@ -1,6 +1,7 @@
 package hibernate.dao;
 
 import hibernate.java.HibernateUtil;
+import hibernate.java.Student;
 import hibernate.java.StudentLOS;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -8,7 +9,7 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class StudentLOSDAO {
-    public static StudentLOS getStudentListOS(String id) {
+    public static StudentLOS get(StudentLOS id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         StudentLOS s = null;
         try {
@@ -36,17 +37,19 @@ public class StudentLOSDAO {
         return true;
     }
 
-    public static boolean removeStudentListOS(String id) {
+    public static boolean remove(StudentLOS id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        StudentLOS s = null;
+        StudentLOS s = get(id);
+        if (s == null) return false;
+
+        Transaction transaction = null;
         try {
-            s = session.get(StudentLOS.class, id);
+            transaction = session.beginTransaction();
             session.delete(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        finally {
+            transaction.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
             session.close();
         }
         return true;

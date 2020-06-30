@@ -1,28 +1,21 @@
 package screens;
 
 import helpers.Helper;
-import hibernate.dao.ClassScheduleDAO;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.ScoreDAO;
-import hibernate.dao.StudentDAO;
-import hibernate.java.Account;
-import hibernate.java.IClass;
-import hibernate.java.Score;
-import hibernate.java.Student;
+import hibernate.dao.*;
+import hibernate.java.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FixScoreScreen extends Screen {
+public class RemoveStudentScreen extends Screen {
     Account currentUser;
     List<Score> scoreList;
 
-    public FixScoreScreen(Account currentUser) {
+    public RemoveStudentScreen(Account currentUser) {
         this.currentUser = currentUser;
         initComponents();
         setLocationRelativeTo(null);
@@ -31,11 +24,8 @@ public class FixScoreScreen extends Screen {
         tableModel.addColumn("STT");
         tableModel.addColumn("MSSV");
         tableModel.addColumn("Họ Tên");
-        tableModel.addColumn("Điểm GK");
-        tableModel.addColumn("Điểm CK");
-        tableModel.addColumn("Điểm Khác");
-        tableModel.addColumn("Điểm Tổng");
-        tableModel.addColumn("Trạng Thái");
+        tableModel.addColumn("Giới Tính");
+        tableModel.addColumn("CMND");
 
         List<IClass> il = IClassDAO.getList();
         if (il.isEmpty()) {
@@ -58,17 +48,28 @@ public class FixScoreScreen extends Screen {
 
     }
 
-    void reloadData() {
-        String classID = (String) classIDCb.getSelectedItem();
-        String subjectID = (String) subComboBox.getSelectedItem();
-        String query = "from hibernate.java.Score S where S.classID = '" + classID + "' and S.subjectID = '" + subjectID + "'";
-        scoreList = ScoreDAO.getList(query);
-        List<Student> sl = StudentDAO.getList();
-        for (Score score : scoreList) {
-            Student s = StudentDAO.getStudent(score.getStudentID());
-            score.setStudentName(s.getName());
+    private String getStudentSelectQuery() {
+        String ci = (String) classIDCb.getSelectedItem();
+        String si = (String) subComboBox.getSelectedItem();
+        if ("----".equals(si)) return "from hibernate.java.Student S where S.classID = '" + ci + "'";
+        String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '" + ci + "'";
+        if (si != null) query += "and SLOS.subjectID = '" + si + "')";
+        else query += ")";
+
+        query = "from hibernate.java.Student S where S.studentID in " + query;
+        return query;
+    }
+
+    private void reloadData() {
+
+        String query = getStudentSelectQuery();
+        List<Student> studentList = StudentDAO.getList(query);
+
+        tableModel.setRowCount(0);
+        for (int i = 0; i < studentList.size(); i++) {
+            Student s = studentList.get(i);
+            tableModel.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
         }
-        displayData(scoreList);
     }
 
     private void displayData(List<Score> l) {
@@ -119,19 +120,19 @@ public class FixScoreScreen extends Screen {
         keyTxf = new JTextField();
         tablePanel = new JPanel();
         tableScrollPanel = new JScrollPane();
-        tableModel = new DefaultTableModel(){
+        tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return !(column == 0 || column == 7);
+                return false;
             }
         };
         table = new JTable(tableModel);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+        appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
-        submitBtn.setText("Lưu");
+        submitBtn.setText("Xoá");
         submitBtn.addActionListener(this::submitBtnActionPerformed);
         appBarPanel.add(submitBtn);
 
@@ -143,27 +144,27 @@ public class FixScoreScreen extends Screen {
         classIDLbl.setPreferredSize(new Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
-        classIDCb.setPreferredSize(new java.awt.Dimension(120, 30));
+        classIDCb.setPreferredSize(new Dimension(120, 30));
         classIDCb.addActionListener(this::classIDComboBoxActionPerformed);
         classIDPanel.add(classIDCb);
 
         optPanel.add(classIDPanel);
 
         subLbl.setText("Môn Học");
-        subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        subLbl.setPreferredSize(new Dimension(60, 30));
         subPanel.add(subLbl);
 
-        subComboBox.setPreferredSize(new java.awt.Dimension(120, 30));
+        subComboBox.setPreferredSize(new Dimension(120, 30));
         subComboBox.addActionListener(this::subComboBoxActionPerformed);
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);
 
         searchLbl.setText("MSSV");
-        searchLbl.setPreferredSize(new java.awt.Dimension(50, 30));
+        searchLbl.setPreferredSize(new Dimension(50, 30));
         searchPanel.add(searchLbl);
 
-        keyTxf.setPreferredSize(new java.awt.Dimension(120, 30));
+        keyTxf.setPreferredSize(new Dimension(120, 30));
         keyTxf.addActionListener(this::keyTxtActionPerformed);
         searchPanel.add(keyTxf);
 
@@ -224,48 +225,28 @@ public class FixScoreScreen extends Screen {
         pack();
     }
 
-    private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void submitBtnActionPerformed(ActionEvent evt) {
         if (tableModel.getRowCount() == 0) {
             return;
         }
-        int n = tableModel.getRowCount();
-        String id;
-        String name;
-        String gk;
-        String ck;
-        String khac;
-        String tong;
+        int selectedRow = table.getSelectedRow();
         String classID = (String) classIDCb.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
-        boolean error = false;
-        for (int i = 0; i < n; i++) {
-            id = (String) tableModel.getValueAt(i, 1);
-            name = (String) tableModel.getValueAt(i, 2);
-            gk = (String) tableModel.getValueAt(i, 3);
-            ck = (String) tableModel.getValueAt(i, 4);
-            khac = (String) tableModel.getValueAt(i, 5);
-            tong = (String) tableModel.getValueAt(i, 6);
-            Score s = new Score(id, name, classID, subjectID,
-                    Helper.parseFloat(gk), Helper.parseFloat(ck), Helper.parseFloat(khac), Helper.parseFloat(tong));
-
-            if (!ScoreDAO.update(s)) {
-                error = true;
-                tableModel.setValueAt("F", i, 7);
-            } else {
-                tableModel.setValueAt("T", i, 7);
-            }
-        }
-
-        if (!error) {
+        String studentID = (String) tableModel.getValueAt(selectedRow, 1);
+        if (StudentDAO.removeStudent(studentID)) {
+            reloadData();
             JOptionPane.showMessageDialog(new JFrame(),
-                    "Thêm Thành Công", "Message", JOptionPane.INFORMATION_MESSAGE);
+                    "Xoá Thành Công", "Message", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(new JFrame(),
-                    "Thêm Thất Bại", "Message", JOptionPane.INFORMATION_MESSAGE);
+                    "Xoá Thất Bại", "Message", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        StudentLOS los = new StudentLOS(studentID,classID,subjectID);
+        StudentLOSDAO.remove(los);
     }
 
-    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void backBtnActionPerformed(ActionEvent evt) {
         if (currentUser.getCategory() == 1) {
             changeScreen(new TCHomeScreen(currentUser));
         } else {
