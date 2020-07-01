@@ -40,6 +40,10 @@ public class StudentListScreen extends Screen{
             classModel.addElement(iClass.getClassID());
         }
         reloadSubjectModel();
+
+        backBtn.addActionListener(this::backBtnActionPerformed);
+        classIDComboBox.addActionListener(this::classIDComboBoxActionPerformed);
+        subComboBox.addActionListener(this::subComboBoxActionPerformed);
     }
 
     private void reloadSubjectModel(){
@@ -63,7 +67,6 @@ public class StudentListScreen extends Screen{
     private void reloadData(){
 
         String query = getStudentSelectQuery();
-        System.out.println(query);
         List<Student> studentList = StudentDAO.getList(query);
 
         tableModel.setRowCount(0);
@@ -98,7 +101,6 @@ public class StudentListScreen extends Screen{
         appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
-        backBtn.addActionListener(this::backBtnActionPerformed);
         appBarPanel.add(backBtn);
 
         classIDLbl.setText("Mã Lớp");
@@ -106,7 +108,6 @@ public class StudentListScreen extends Screen{
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
-        classIDComboBox.addActionListener(this::classIDComboBoxActionPerformed);
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
@@ -116,7 +117,6 @@ public class StudentListScreen extends Screen{
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
-        subComboBox.addActionListener(this::subComboBoxActionPerformed);
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);

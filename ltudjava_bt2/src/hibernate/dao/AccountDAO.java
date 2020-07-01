@@ -2,7 +2,6 @@ package hibernate.dao;
 
 import hibernate.java.Account;
 import hibernate.java.HibernateUtil;
-import hibernate.java.Student;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -21,18 +20,33 @@ public class AccountDAO {
         }
         return accounts;
     }
-
-    public static Account getAccount(String username) {
+    public static Account get(String id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Account acc = null;
+        Account a = null;
         try {
-            acc = session.get(Account.class, username);
+            a = session.get(Account.class, id);
+        } finally {
+            session.close();
+        }
+        return a;
+    }
+
+    public static boolean update(Account a) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        if (get(a.getUsername()) == null) {
+            return false;
+        }
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.update(a);
+            transaction.commit();
         } catch (Exception e) {
+            transaction.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return acc;
-
+        return true;
     }
 }

@@ -14,7 +14,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +62,6 @@ public class FixScoreScreen extends Screen {
         String subjectID = (String) subComboBox.getSelectedItem();
         String query = "from hibernate.java.Score S where S.classID = '" + classID + "' and S.subjectID = '" + subjectID + "'";
         scoreList = ScoreDAO.getList(query);
-        List<Student> sl = StudentDAO.getList();
         for (Score score : scoreList) {
             Student s = StudentDAO.getStudent(score.getStudentID());
             score.setStudentName(s.getName());
@@ -129,7 +127,7 @@ public class FixScoreScreen extends Screen {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+        appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         submitBtn.setText("Lưu");
         submitBtn.addActionListener(this::submitBtnActionPerformed);
@@ -143,27 +141,27 @@ public class FixScoreScreen extends Screen {
         classIDLbl.setPreferredSize(new Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
-        classIDCb.setPreferredSize(new java.awt.Dimension(120, 30));
+        classIDCb.setPreferredSize(new Dimension(120, 30));
         classIDCb.addActionListener(this::classIDComboBoxActionPerformed);
         classIDPanel.add(classIDCb);
 
         optPanel.add(classIDPanel);
 
         subLbl.setText("Môn Học");
-        subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        subLbl.setPreferredSize(new Dimension(60, 30));
         subPanel.add(subLbl);
 
-        subComboBox.setPreferredSize(new java.awt.Dimension(120, 30));
+        subComboBox.setPreferredSize(new Dimension(120, 30));
         subComboBox.addActionListener(this::subComboBoxActionPerformed);
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);
 
         searchLbl.setText("MSSV");
-        searchLbl.setPreferredSize(new java.awt.Dimension(50, 30));
+        searchLbl.setPreferredSize(new Dimension(50, 30));
         searchPanel.add(searchLbl);
 
-        keyTxf.setPreferredSize(new java.awt.Dimension(120, 30));
+        keyTxf.setPreferredSize(new Dimension(120, 30));
         keyTxf.addActionListener(this::keyTxtActionPerformed);
         searchPanel.add(keyTxf);
 
@@ -224,7 +222,7 @@ public class FixScoreScreen extends Screen {
         pack();
     }
 
-    private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void submitBtnActionPerformed(ActionEvent evt) {
         if (tableModel.getRowCount() == 0) {
             return;
         }
@@ -265,7 +263,7 @@ public class FixScoreScreen extends Screen {
         }
     }
 
-    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void backBtnActionPerformed(ActionEvent evt) {
         if (currentUser.getCategory() == 1) {
             changeScreen(new TCHomeScreen(currentUser));
         } else {

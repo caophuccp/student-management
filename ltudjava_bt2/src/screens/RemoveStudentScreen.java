@@ -36,6 +36,13 @@ public class RemoveStudentScreen extends Screen {
         }
 
         reloadSubjectModel();
+
+        submitBtn.addActionListener(this::submitBtnActionPerformed);
+        backBtn.addActionListener(this::backBtnActionPerformed);
+        classIDCb.addActionListener(this::classIDComboBoxActionPerformed);
+        subComboBox.addActionListener(this::subComboBoxActionPerformed);
+        keyTxf.addActionListener(this::keyTxtActionPerformed);
+        searchBtn.addActionListener(this::keyTxtActionPerformed);
     }
 
     private void reloadSubjectModel() {
@@ -133,11 +140,9 @@ public class RemoveStudentScreen extends Screen {
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         submitBtn.setText("Xoá");
-        submitBtn.addActionListener(this::submitBtnActionPerformed);
         appBarPanel.add(submitBtn);
 
         backBtn.setText("Huỷ");
-        backBtn.addActionListener(this::backBtnActionPerformed);
         appBarPanel.add(backBtn);
 
         classIDLbl.setText("Mã Lớp");
@@ -145,7 +150,6 @@ public class RemoveStudentScreen extends Screen {
         classIDPanel.add(classIDLbl);
 
         classIDCb.setPreferredSize(new Dimension(120, 30));
-        classIDCb.addActionListener(this::classIDComboBoxActionPerformed);
         classIDPanel.add(classIDCb);
 
         optPanel.add(classIDPanel);
@@ -155,7 +159,6 @@ public class RemoveStudentScreen extends Screen {
         subPanel.add(subLbl);
 
         subComboBox.setPreferredSize(new Dimension(120, 30));
-        subComboBox.addActionListener(this::subComboBoxActionPerformed);
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);
@@ -165,12 +168,10 @@ public class RemoveStudentScreen extends Screen {
         searchPanel.add(searchLbl);
 
         keyTxf.setPreferredSize(new Dimension(120, 30));
-        keyTxf.addActionListener(this::keyTxtActionPerformed);
         searchPanel.add(keyTxf);
 
         searchBtn.setText("Tìm Kiếm");
         searchBtn.setPreferredSize(new Dimension(90, 30));
-        searchBtn.addActionListener(this::keyTxtActionPerformed);
         searchPanel.add(searchBtn);
 
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.LINE_AXIS));

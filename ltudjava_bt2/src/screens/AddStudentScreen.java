@@ -13,7 +13,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,43 +53,43 @@ public class AddStudentScreen extends Screen {
 
     private void initComponents() {
 
-        classModel = new DefaultComboBoxModel<String>();
-        subjectModel = new DefaultComboBoxModel<String>();
+        classModel = new DefaultComboBoxModel<>();
+        subjectModel = new DefaultComboBoxModel<>();
 
         btnPanel = new JPanel();
         addStudentBtn = new JButton();
         submitBtn = new JButton();
 
-        appBarPanel = new javax.swing.JPanel();
-        backBtn = new javax.swing.JButton();
-        separator = new javax.swing.JSeparator();
-        bodyPanel = new javax.swing.JPanel();
-        optPanel = new javax.swing.JPanel();
-        classIDPanel = new javax.swing.JPanel();
-        classIDLbl = new javax.swing.JLabel();
-        classIDComboBox = new javax.swing.JComboBox<>();
-        subPanel = new javax.swing.JPanel();
-        subLbl = new javax.swing.JLabel();
-        subComboBox = new javax.swing.JComboBox<>();
-        tablePanel = new javax.swing.JPanel();
-        tableScrollPanel = new javax.swing.JScrollPane();
+        appBarPanel = new JPanel();
+        backBtn = new JButton();
+        separator = new JSeparator();
+        bodyPanel = new JPanel();
+        optPanel = new JPanel();
+        classIDPanel = new JPanel();
+        classIDLbl = new JLabel();
+        classIDComboBox = new JComboBox<>();
+        subPanel = new JPanel();
+        subLbl = new JLabel();
+        subComboBox = new JComboBox<>();
+        tablePanel = new JPanel();
+        tableScrollPanel = new JScrollPane();
         tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return !(column == 0 || column == 5);
             }
         };
-        table = new javax.swing.JTable(tableModel);
+        table = new JTable(tableModel);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
         backBtn.addActionListener(this::backBtnActionPerformed);
         appBarPanel.add(backBtn);
 
         classIDLbl.setText("Mã Lớp");
-        classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        classIDLbl.setPreferredSize(new Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
@@ -100,7 +99,7 @@ public class AddStudentScreen extends Screen {
         optPanel.add(classIDPanel);
 
         subLbl.setText("Mon Hoc");
-        subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        subLbl.setPreferredSize(new Dimension(60, 30));
 
         subPanel.add(subLbl);
 
@@ -110,67 +109,67 @@ public class AddStudentScreen extends Screen {
         optPanel.add(subPanel);
 
         addStudentBtn.setText("Thêm Sinh Viên");
-        addStudentBtn.setPreferredSize(new java.awt.Dimension(140, 40));
+        addStudentBtn.setPreferredSize(new Dimension(140, 40));
         addStudentBtn.addActionListener(this::addBtnActionPerformed);
         btnPanel.add(addStudentBtn);
 
         submitBtn.setText("Lưu Thay Đổi");
-        submitBtn.setPreferredSize(new java.awt.Dimension(140, 40));
+        submitBtn.setPreferredSize(new Dimension(140, 40));
         submitBtn.addActionListener(this::submitBtnActionPerformed);
         btnPanel.add(submitBtn);
 
 
-        tablePanel.setLayout(new javax.swing.BoxLayout(tablePanel, javax.swing.BoxLayout.LINE_AXIS));
+        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.LINE_AXIS));
         tableScrollPanel.setViewportView(table);
 
         tablePanel.add(tableScrollPanel);
 
-        javax.swing.GroupLayout bodyPanelLayout = new javax.swing.GroupLayout(bodyPanel);
+        GroupLayout bodyPanelLayout = new GroupLayout(bodyPanel);
         bodyPanel.setLayout(bodyPanelLayout);
         bodyPanelLayout.setHorizontalGroup(
-                bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyPanelLayout.createSequentialGroup()
-                                .addGroup(bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                bodyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, bodyPanelLayout.createSequentialGroup()
+                                .addGroup(bodyPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                                 .addGap(3, 3, 3)
-                                                .addGroup(bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(bodyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                                                 .addGap(6, 6, 6)
-                                                                .addComponent(btnPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                        .addComponent(optPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)))
+                                                                .addComponent(btnPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                        .addComponent(optPanel, GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)))
                                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                                                .addComponent(tablePanel, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         bodyPanelLayout.setVerticalGroup(
-                bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                bodyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
-                                .addComponent(optPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                .addComponent(optPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(appBarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(separator)
-                        .addComponent(bodyPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bodyPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(appBarPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(appBarPanel, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -239,20 +238,20 @@ public class AddStudentScreen extends Screen {
     private JButton addStudentBtn;
     private JButton submitBtn;
 
-    private javax.swing.JPanel appBarPanel;
-    private javax.swing.JButton backBtn;
-    private javax.swing.JPanel bodyPanel;
-    private javax.swing.JComboBox<String> classIDComboBox;
-    private javax.swing.JLabel classIDLbl;
-    private javax.swing.JPanel classIDPanel;
-    private javax.swing.JPanel optPanel;
-    private javax.swing.JSeparator separator;
-    private javax.swing.JComboBox<String> subComboBox;
-    private javax.swing.JLabel subLbl;
-    private javax.swing.JPanel subPanel;
-    private javax.swing.JTable table;
-    private javax.swing.JPanel tablePanel;
-    private javax.swing.JScrollPane tableScrollPanel;
+    private JPanel appBarPanel;
+    private JButton backBtn;
+    private JPanel bodyPanel;
+    private JComboBox<String> classIDComboBox;
+    private JLabel classIDLbl;
+    private JPanel classIDPanel;
+    private JPanel optPanel;
+    private JSeparator separator;
+    private JComboBox<String> subComboBox;
+    private JLabel subLbl;
+    private JPanel subPanel;
+    private JTable table;
+    private JPanel tablePanel;
+    private JScrollPane tableScrollPanel;
     private DefaultTableModel tableModel;
     private DefaultComboBoxModel<String> classModel;
     private DefaultComboBoxModel<String> subjectModel;

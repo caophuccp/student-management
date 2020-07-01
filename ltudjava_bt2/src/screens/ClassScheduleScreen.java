@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,10 +49,19 @@ public class ClassScheduleScreen extends Screen{
 
     }
 
+    private void classIDCBActionPerformed(ActionEvent e){
+        reloadSubjectModel();
+        reloadData();
+    }
+
+    private void subCBActionPerformed(ActionEvent e){
+        reloadData();
+    }
+
     private void initComponents() {
 
-        classModel = new DefaultComboBoxModel<String>();
-        subjectModel = new DefaultComboBoxModel<String>();
+        classModel = new DefaultComboBoxModel<>();
+        subjectModel = new DefaultComboBoxModel<>();
 
         appBarPanel = new JPanel();
         backBtn = new JButton();
@@ -72,59 +80,29 @@ public class ClassScheduleScreen extends Screen{
         table = new JTable(tableModel);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+        appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                backBtnActionPerformed(e);
-            }
-        });
+        backBtn.addActionListener(this::backBtnActionPerformed);
         appBarPanel.add(backBtn);
-//        GroupLayout appBarPanelLayout = new GroupLayout(appBarPanel);
-//        appBarPanel.setLayout(appBarPanelLayout);
-//        appBarPanelLayout.setHorizontalGroup(
-//                appBarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//                        .addGroup(GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-//                                .addGap(0, 0, Short.MAX_VALUE)
-//                                .addComponent(backBtn))
-//        );
-//        appBarPanelLayout.setVerticalGroup(
-//                appBarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//                        .addGroup(GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-//                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addComponent(backBtn)
-//                                .addContainerGap())
-//        );
 
         classIDLbl.setText("Mã Lớp");
-        classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        classIDLbl.setPreferredSize(new Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
-        classIDComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reloadSubjectModel();
-                reloadData();
-            }
-        });
+        classIDComboBox.addActionListener(this::classIDCBActionPerformed);
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
 
         subLbl.setText("Môn Học");
-        subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        subLbl.setPreferredSize(new Dimension(60, 30));
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
-        subComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reloadData();
-            }
-        });
+        subComboBox.setModel(subjectModel);
+        subComboBox.addActionListener(this::subCBActionPerformed);
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);
@@ -188,9 +166,6 @@ public class ClassScheduleScreen extends Screen{
     void reloadData(){
         String classID = (String) classIDComboBox.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
-//        List<ClassSchedule> l = ClassScheduleDAO.getList().stream()
-//                .filter((cs)-> cs.getClassID().equals(classID) && ("----".equals(subjectID)
-//                        || cs.getSubjectID().equals(subjectID))).collect(Collectors.toList());
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
         if (subjectID != null && !"----".equals(subjectID)) query += "and CS.subjectID = '" + subjectID + "'";
         List<ClassSchedule> l = ClassScheduleDAO.getList(query);

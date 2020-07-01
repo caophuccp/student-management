@@ -1,15 +1,12 @@
 package screens;
 
-import hibernate.dao.ClassScheduleDAO;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.ScoreDAO;
-import hibernate.dao.StudentDAO;
+import hibernate.dao.*;
 import hibernate.java.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +45,10 @@ public class ScoreTableScreen extends Screen{
         }
 
         reloadSubjectModel();
+
+        backBtn.addActionListener(this::backBtnActionPerformed);
+        classIDComboBox.addActionListener(this::classIDComboBoxActionPerformed);
+        subComboBox.addActionListener(this::subComboBoxActionPerformed);
     }
     private void reloadSubjectModel(){
         subjectModel.removeAllElements();
@@ -63,10 +64,9 @@ public class ScoreTableScreen extends Screen{
         String classID = (String) classIDComboBox.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
         String query = "from hibernate.java.Score S where S.classID = '" + classID + "' and S.subjectID = '" + subjectID + "'";
-        List<Score> l = ScoreDAO.getList(query);
-        List<Student> sl = StudentDAO.getList();
+        List<Score> l = HibernateDAO.getList(query);
         for (Score score : l) {
-            Student s = StudentDAO.getStudent(score.getStudentID());
+            Student s = HibernateDAO.get(Student.class, score.getStudentID());
             score.setStudentName(s.getName());
         }
         tableModel.setRowCount(0);
@@ -84,7 +84,7 @@ public class ScoreTableScreen extends Screen{
             cs.getCk(), cs.getKhac(), cs.getTong(), rs});
         }
 
-        int percentPass = (int)Math.round(100*(float)d/(float)l.size());
+        int percentPass = Math.round(100*(float)d/(float)l.size());
         tkTabelModel.setRowCount(0);
         tkTabelModel.addRow(new Object[]{l.size(), d, percentPass, l.size() - d, 100 - percentPass});
     }
@@ -100,8 +100,8 @@ public class ScoreTableScreen extends Screen{
 
     private void initComponents() {
 
-        classModel = new DefaultComboBoxModel<String>();
-        subjectModel = new DefaultComboBoxModel<String>();
+        classModel = new DefaultComboBoxModel<>();
+        subjectModel = new DefaultComboBoxModel<>();
 
         appBarPanel = new JPanel();
         backBtn = new JButton();
@@ -126,58 +126,25 @@ public class ScoreTableScreen extends Screen{
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+        appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                backBtnActionPerformed(e);
-            }
-        });
         appBarPanel.add(backBtn);
-//        GroupLayout appBarPanelLayout = new GroupLayout(appBarPanel);
-//        appBarPanel.setLayout(appBarPanelLayout);
-//        appBarPanelLayout.setHorizontalGroup(
-//                appBarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//                        .addGroup(GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-//                                .addGap(0, 0, Short.MAX_VALUE)
-//                                .addComponent(backBtn))
-//        );
-//        appBarPanelLayout.setVerticalGroup(
-//                appBarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//                        .addGroup(GroupLayout.Alignment.TRAILING, appBarPanelLayout.createSequentialGroup()
-//                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addComponent(backBtn)
-//                                .addContainerGap())
-//        );
 
         classIDLbl.setText("Mã Lớp");
-        classIDLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        classIDLbl.setPreferredSize(new Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
         classIDComboBox.setModel(classModel);
-        classIDComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                classIDComboBoxActionPerformed(e);
-            }
-        });
         classIDPanel.add(classIDComboBox);
 
         optPanel.add(classIDPanel);
 
         subLbl.setText("Môn Học");
-        subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        subLbl.setPreferredSize(new Dimension(60, 30));
         subPanel.add(subLbl);
 
         subComboBox.setModel(subjectModel);
-        subComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                subComboBoxActionPerformed(e);
-            }
-        });
         subPanel.add(subComboBox);
 
         optPanel.add(subPanel);

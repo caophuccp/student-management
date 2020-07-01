@@ -1,14 +1,13 @@
 package screens;
 
 
+import hibernate.dao.AccountDAO;
 import hibernate.java.Account;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AccSettingsScreen extends Screen {
-    private Screen preScene;
     private Account currentUser;
     public AccSettingsScreen(Account account) {
         this.currentUser = account;
@@ -19,47 +18,42 @@ public class AccSettingsScreen extends Screen {
 
     private void initComponents() {
 
-        home = new javax.swing.JPanel();
-        topBar = new javax.swing.JPanel();
-        backBtn = new javax.swing.JButton();
-        separator = new javax.swing.JSeparator();
-        body = new javax.swing.JPanel();
-        oldPassPanel = new javax.swing.JPanel();
-        oldPassLbl = new javax.swing.JLabel();
-        oldPassTxf = new javax.swing.JPasswordField();
-        newPassPanel = new javax.swing.JPanel();
-        newPassLbl = new javax.swing.JLabel();
-        newPassTxf = new javax.swing.JPasswordField();
-        verPassPanel = new javax.swing.JPanel();
-        verPassLbl = new javax.swing.JLabel();
-        verPassTxf = new javax.swing.JPasswordField();
-        submitPanel = new javax.swing.JPanel();
-        submitBtn = new javax.swing.JButton();
+        home = new JPanel();
+        topBar = new JPanel();
+        backBtn = new JButton();
+        separator = new JSeparator();
+        body = new JPanel();
+        oldPassPanel = new JPanel();
+        oldPassLbl = new JLabel();
+        oldPassTxf = new JPasswordField();
+        newPassPanel = new JPanel();
+        newPassLbl = new JLabel();
+        newPassTxf = new JPasswordField();
+        verPassPanel = new JPanel();
+        verPassLbl = new JLabel();
+        verPassTxf = new JPasswordField();
+        submitPanel = new JPanel();
+        submitBtn = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.FlowLayout());
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new FlowLayout());
 
-        home.setPreferredSize(new java.awt.Dimension(300, 300));
+        home.setPreferredSize(new Dimension(300, 300));
 
-        topBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+        topBar.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
         backBtn.setPreferredSize(new Dimension(60,30));
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                back();
-            }
-        });
+        backBtn.addActionListener(e -> back());
         topBar.add(backBtn);
 
-        body.setLayout(new java.awt.GridLayout(4, 0));
+        body.setLayout(new GridLayout(4, 0));
 
         oldPassLbl.setPreferredSize(new Dimension(100,30));
         oldPassLbl.setText("Mật Khẩu cũ");
         oldPassPanel.add(oldPassLbl);
 
-        oldPassTxf.setPreferredSize(new java.awt.Dimension(150, 30));
+        oldPassTxf.setPreferredSize(new Dimension(150, 30));
         oldPassPanel.add(oldPassTxf);
 
         body.add(oldPassPanel);
@@ -68,7 +62,7 @@ public class AccSettingsScreen extends Screen {
         newPassLbl.setText("Mật khẩu mới");
         newPassPanel.add(newPassLbl);
 
-        newPassTxf.setPreferredSize(new java.awt.Dimension(150, 30));
+        newPassTxf.setPreferredSize(new Dimension(150, 30));
         newPassPanel.add(newPassTxf);
 
         body.add(newPassPanel);
@@ -77,47 +71,42 @@ public class AccSettingsScreen extends Screen {
         verPassLbl.setText("Mật khẩu mới");
         verPassPanel.add(verPassLbl);
 
-        verPassTxf.setPreferredSize(new java.awt.Dimension(150, 30));
+        verPassTxf.setPreferredSize(new Dimension(150, 30));
         verPassPanel.add(verPassTxf);
 
         body.add(verPassPanel);
 
         submitBtn.setText("Thay Đổi");
-        submitBtn.setPreferredSize(new java.awt.Dimension(100, 30));
-        submitBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changePassword();
-            }
-        });
+        submitBtn.setPreferredSize(new Dimension(100, 30));
+        submitBtn.addActionListener(e -> changePassword());
         submitPanel.add(submitBtn);
 
         body.add(submitPanel);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(home);
+        GroupLayout jPanel1Layout = new GroupLayout(home);
         home.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGap(6, 6, 6)
-                                                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                                .addComponent(body, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
+                                        .addGroup(GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addComponent(topBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(topBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addComponent(separator))
                                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(body, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -135,24 +124,53 @@ public class AccSettingsScreen extends Screen {
     }
 
     private void changePassword(){
-
+        String op = String.valueOf(oldPassTxf.getPassword());
+        if (!currentUser.getPassword().equals(op)) {
+            JOptionPane.showMessageDialog(this,"Mật khẩu không chính xác",
+                    "", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String p1 = String.valueOf(newPassTxf.getPassword());
+        String p2 = String.valueOf(verPassTxf.getPassword());
+        if (!p1.equals(p2)) {
+            JOptionPane.showMessageDialog(this,"Mật khẩu không khớp",
+                    "", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!validate(p1)) {
+            JOptionPane.showMessageDialog(this,"Mật khẩu trên 8 ký tự, ít nhất 1 ký tự viết hoa,ít nhất 1 ký tự số",
+                    "", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        currentUser.setPassword(p1);
+        if (AccountDAO.update(currentUser)) {
+            JOptionPane.showMessageDialog(this,"Thay đổi thành công",
+                    "", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        currentUser.setPassword(op);
+        JOptionPane.showMessageDialog(this,"Thay đổi thất bại",
+                "", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private javax.swing.JButton backBtn;
-    private javax.swing.JPanel body;
-    private javax.swing.JPanel home;
-    private javax.swing.JSeparator separator;
-    private javax.swing.JLabel newPassLbl;
-    private javax.swing.JPanel newPassPanel;
-    private javax.swing.JPasswordField newPassTxf;
-    private javax.swing.JLabel oldPassLbl;
-    private javax.swing.JPanel oldPassPanel;
-    private javax.swing.JPasswordField oldPassTxf;
-    private javax.swing.JButton submitBtn;
-    private javax.swing.JPanel submitPanel;
-    private javax.swing.JPanel topBar;
-    private javax.swing.JLabel verPassLbl;
-    private javax.swing.JPanel verPassPanel;
-    private javax.swing.JPasswordField verPassTxf;
-    // End of variables declaration
+    private boolean validate(String password) {
+        return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    }
+
+    private JButton backBtn;
+    private JPanel body;
+    private JPanel home;
+    private JSeparator separator;
+    private JLabel newPassLbl;
+    private JPanel newPassPanel;
+    private JPasswordField newPassTxf;
+    private JLabel oldPassLbl;
+    private JPanel oldPassPanel;
+    private JPasswordField oldPassTxf;
+    private JButton submitBtn;
+    private JPanel submitPanel;
+    private JPanel topBar;
+    private JLabel verPassLbl;
+    private JPanel verPassPanel;
+    private JPasswordField verPassTxf;
 }

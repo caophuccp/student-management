@@ -12,9 +12,9 @@ import hibernate.java.Score;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +47,12 @@ public class ImportScoreTableScreen extends Screen {
         }
 
         reloadSubjectModel();
+
+        backBtn.addActionListener(this::backBtnActionPerformed);
+        submitBtn.addActionListener(this::submitBtnActionPerformed);
+        classIDCb.addActionListener(this::classIDCbActionPerformed);
+        subComboBox.addActionListener(this::subComboBoxActionPerformed);
+        fileChooserBtn.addActionListener(this::fileChooserBtnActionPerformed);
     }
 
     private void reloadSubjectModel() {
@@ -89,67 +95,36 @@ public class ImportScoreTableScreen extends Screen {
         subjectModel = new DefaultComboBoxModel<>();
         subPanel = new JPanel();
         subLbl = new JLabel();
-        subComboBox = new JComboBox(subjectModel);
+        subComboBox = new JComboBox<>(subjectModel);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        backBtn.setText("Huỷ");
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                backBtnActionPerformed(e);
-            }
-        });
 
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         submitBtn.setText("Thêm");
-        submitBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                submitBtnActionPerformed(e);
-            }
-        });
         appBarPanel.add(submitBtn);
 
         backBtn.setText("Huỷ");
         appBarPanel.add(backBtn);
 
-
         classIDLbl.setText("Mã Lớp");
-        classIDLbl.setPreferredSize(new java.awt.Dimension(120, 30));
+        classIDLbl.setPreferredSize(new Dimension(120, 30));
         classIDPanel.add(classIDLbl);
 
-        classIDCb.setPreferredSize(new java.awt.Dimension(120, 30));
-        classIDCb.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                classIDCbActionPerformed(e);
-            }
-        });
+        classIDCb.setPreferredSize(new Dimension(120, 30));
         classIDPanel.add(classIDCb);
 
         subLbl.setText("Môn Học");
-        subLbl.setPreferredSize(new java.awt.Dimension(60, 30));
+        subLbl.setPreferredSize(new Dimension(60, 30));
         subPanel.add(subLbl);
 
-        subComboBox.setPreferredSize(new java.awt.Dimension(120, 30));
-        subComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                subComboBoxActionPerformed(e);
-            }
-        });
+        subComboBox.setPreferredSize(new Dimension(120, 30));
         subPanel.add(subComboBox);
 
-        fileChooserPanel.setLayout(new java.awt.GridLayout(2, 0));
+        fileChooserPanel.setLayout(new GridLayout(2, 0));
 
         fileChooserBtn.setText("Chọn File");
-        fileChooserBtn.setPreferredSize(new java.awt.Dimension(120, 30));
-        fileChooserBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                fileChooserBtnActionPerformed(evt);
-            }
-        });
+        fileChooserBtn.setPreferredSize(new Dimension(120, 30));
         btnPanel.add(fileChooserBtn);
 
         fileChooserPanel.add(btnPanel);
