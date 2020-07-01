@@ -1,7 +1,7 @@
 package screens;
 
 
-import hibernate.dao.AccountDAO;
+import hibernate.dao.HibernateDAO;
 import hibernate.java.Account;
 
 import javax.swing.*;
@@ -143,7 +143,7 @@ public class AccSettingsScreen extends Screen {
             return;
         }
         currentUser.setPassword(p1);
-        if (AccountDAO.update(currentUser)) {
+        if (HibernateDAO.update(currentUser)) {
             JOptionPane.showMessageDialog(this,"Thay đổi thành công",
                     "", JOptionPane.INFORMATION_MESSAGE);
             return;

@@ -1,20 +1,12 @@
 package screens;
 
-import hibernate.dao.ClassScheduleDAO;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.StudentDAO;
-import hibernate.dao.StudentLOSDAO;
-import hibernate.java.Account;
-import hibernate.java.IClass;
-import hibernate.java.Student;
-import hibernate.java.StudentLOS;
+import hibernate.dao.HibernateDAO;
+import hibernate.java.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class StudentListScreen extends Screen{
@@ -32,7 +24,8 @@ public class StudentListScreen extends Screen{
         tableModel.addColumn("Giới Tính");
         tableModel.addColumn("CMND");
 
-        List<IClass> il = IClassDAO.getList();
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -44,15 +37,16 @@ public class StudentListScreen extends Screen{
         backBtn.addActionListener(this::backBtnActionPerformed);
         classIDComboBox.addActionListener(this::classIDComboBoxActionPerformed);
         subComboBox.addActionListener(this::subComboBoxActionPerformed);
+        reloadData();
     }
 
     private void reloadSubjectModel(){
         subjectModel.removeAllElements();
         subjectModel.addElement("----");
         String classID = (String)classIDComboBox.getSelectedItem();
-        ClassScheduleDAO.getList().stream()
-                .filter((cs)->cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
     private String getStudentSelectQuery(){
@@ -67,7 +61,7 @@ public class StudentListScreen extends Screen{
     private void reloadData(){
 
         String query = getStudentSelectQuery();
-        List<Student> studentList = StudentDAO.getList(query);
+        List<Student> studentList = HibernateDAO.getList(query);
 
         tableModel.setRowCount(0);
         for (int i = 0; i < studentList.size(); i++) {
@@ -78,8 +72,8 @@ public class StudentListScreen extends Screen{
 
     private void initComponents() {
 
-        classModel = new DefaultComboBoxModel<String>();
-        subjectModel = new DefaultComboBoxModel<String>();
+        classModel = new DefaultComboBoxModel<>();
+        subjectModel = new DefaultComboBoxModel<>();
 
         appBarPanel = new javax.swing.JPanel();
         backBtn = new javax.swing.JButton();

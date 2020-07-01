@@ -1,13 +1,7 @@
 package screens;
 
-import hibernate.dao.ClassScheduleDAO;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.StudentDAO;
-import hibernate.dao.StudentLOSDAO;
-import hibernate.java.Account;
-import hibernate.java.IClass;
-import hibernate.java.Student;
-import hibernate.java.StudentLOS;
+import hibernate.dao.HibernateDAO;
+import hibernate.java.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,7 +25,9 @@ public class AddStudentScreen extends Screen {
         tableModel.addColumn("Giới Tính");
         tableModel.addColumn("CMND");
         tableModel.addColumn("Trạng Thái");
-        List<IClass> il = IClassDAO.getList();
+
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -46,9 +42,9 @@ public class AddStudentScreen extends Screen {
         subjectModel.removeAllElements();
         subjectModel.addElement("----");
         String classID = (String) classIDComboBox.getSelectedItem();
-        ClassScheduleDAO.getList().stream()
-                .filter((cs) -> cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
     private void initComponents() {
@@ -204,7 +200,7 @@ public class AddStudentScreen extends Screen {
             gender = (String) tableModel.getValueAt(i, 3);
             idcard = (String) tableModel.getValueAt(i, 4);
             Student s = new Student(id, name, gender, idcard, classID);
-            if (!StudentDAO.addStudent(s)) {
+            if (!HibernateDAO.add(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 5);
             } else {
@@ -213,7 +209,11 @@ public class AddStudentScreen extends Screen {
 
             if (bs) {
                 StudentLOS los = new StudentLOS(id, classID, subjectID);
-                StudentLOSDAO.add(los);
+                HibernateDAO.add(los);
+//
+//                String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+//                List<ClassSchedule> cl = HibernateDAO.getList(query);
+//                cl.forEach();
             }
         }
 

@@ -1,14 +1,8 @@
 package screens;
 
 import helpers.Helper;
-import hibernate.dao.ClassScheduleDAO;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.ScoreDAO;
-import hibernate.dao.StudentDAO;
-import hibernate.java.Account;
-import hibernate.java.IClass;
-import hibernate.java.Score;
-import hibernate.java.Student;
+import hibernate.dao.HibernateDAO;
+import hibernate.java.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -36,7 +30,8 @@ public class FixScoreScreen extends Screen {
         tableModel.addColumn("Điểm Tổng");
         tableModel.addColumn("Trạng Thái");
 
-        List<IClass> il = IClassDAO.getList();
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -51,19 +46,18 @@ public class FixScoreScreen extends Screen {
         subjectModel.removeAllElements();
         subjectModel.addElement("----");
         String classID = (String) classIDCb.getSelectedItem();
-        ClassScheduleDAO.getList().stream()
-                .filter((cs) -> cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
-
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
     void reloadData() {
         String classID = (String) classIDCb.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
         String query = "from hibernate.java.Score S where S.classID = '" + classID + "' and S.subjectID = '" + subjectID + "'";
-        scoreList = ScoreDAO.getList(query);
+        scoreList = HibernateDAO.getList(query);
         for (Score score : scoreList) {
-            Student s = StudentDAO.getStudent(score.getStudentID());
+            Student s = HibernateDAO.get(Student.class ,score.getStudentID());
             score.setStudentName(s.getName());
         }
         displayData(scoreList);
@@ -246,7 +240,7 @@ public class FixScoreScreen extends Screen {
             Score s = new Score(id, name, classID, subjectID,
                     Helper.parseFloat(gk), Helper.parseFloat(ck), Helper.parseFloat(khac), Helper.parseFloat(tong));
 
-            if (!ScoreDAO.update(s)) {
+            if (!HibernateDAO.update(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 7);
             } else {

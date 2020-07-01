@@ -36,7 +36,8 @@ public class ScoreTableScreen extends Screen{
         tkTabelModel.addColumn("Phần Trăm Rớt");
         tkTabelModel.addRow(new Object[]{0,0,0,0,0});
 
-        List<IClass> il = IClassDAO.getList();
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -54,10 +55,9 @@ public class ScoreTableScreen extends Screen{
         subjectModel.removeAllElements();
         subjectModel.addElement("----");
         String classID = (String)classIDComboBox.getSelectedItem();
-        ClassScheduleDAO.getList().stream()
-                .filter((cs)->cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs)->subjectModel.addElement(cs.getSubjectID()));
-
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
     void reloadData(){

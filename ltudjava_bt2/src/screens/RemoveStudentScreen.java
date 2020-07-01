@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class RemoveStudentScreen extends Screen {
     Account currentUser;
-    List<Score> scoreList;
+    List<Student> studentList = null;
 
     public RemoveStudentScreen(Account currentUser) {
         this.currentUser = currentUser;
@@ -27,7 +27,8 @@ public class RemoveStudentScreen extends Screen {
         tableModel.addColumn("Giới Tính");
         tableModel.addColumn("CMND");
 
-        List<IClass> il = IClassDAO.getList();
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -43,69 +44,7 @@ public class RemoveStudentScreen extends Screen {
         subComboBox.addActionListener(this::subComboBoxActionPerformed);
         keyTxf.addActionListener(this::keyTxtActionPerformed);
         searchBtn.addActionListener(this::keyTxtActionPerformed);
-    }
-
-    private void reloadSubjectModel() {
-        subjectModel.removeAllElements();
-        subjectModel.addElement("----");
-        String classID = (String) classIDCb.getSelectedItem();
-        ClassScheduleDAO.getList().stream()
-                .filter((cs) -> cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
-
-    }
-
-    private String getStudentSelectQuery() {
-        String ci = (String) classIDCb.getSelectedItem();
-        String si = (String) subComboBox.getSelectedItem();
-        if ("----".equals(si)) return "from hibernate.java.Student S where S.classID = '" + ci + "'";
-        String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '" + ci + "'";
-        if (si != null) query += "and SLOS.subjectID = '" + si + "')";
-        else query += ")";
-
-        query = "from hibernate.java.Student S where S.studentID in " + query;
-        return query;
-    }
-
-    private void reloadData() {
-
-        String query = getStudentSelectQuery();
-        List<Student> studentList = StudentDAO.getList(query);
-
-        tableModel.setRowCount(0);
-        for (int i = 0; i < studentList.size(); i++) {
-            Student s = studentList.get(i);
-            tableModel.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
-        }
-    }
-
-    private void displayData(List<Score> l) {
-        tableModel.setRowCount(0);
-        for (int i = 0; i < l.size(); i++) {
-            Score cs = l.get(i);
-
-            tableModel.addRow(new Object[]{"" + (i + 1), cs.getStudentID(), cs.getStudentName()
-                    , Helper.toString(cs.getGk()), Helper.toString(cs.getCk()), Helper.toString(cs.getKhac())
-                    , Helper.toString(cs.getTong())});
-        }
-    }
-
-    private void classIDComboBoxActionPerformed(ActionEvent e) {
-        reloadSubjectModel();
         reloadData();
-    }
-
-    private void subComboBoxActionPerformed(ActionEvent e) {
-        reloadData();
-    }
-
-    private void keyTxtActionPerformed(ActionEvent e) {
-        if (keyTxf.getText() == null || keyTxf.getText().isEmpty()) {
-            displayData(scoreList);
-            return;
-        }
-        String key = keyTxf.getText();
-        displayData(scoreList.stream().filter((s) -> s.getStudentID().contains(key)).collect(Collectors.toList()));
     }
 
     private void initComponents() {
@@ -226,6 +165,59 @@ public class RemoveStudentScreen extends Screen {
         pack();
     }
 
+    private void reloadSubjectModel() {
+        subjectModel.removeAllElements();
+        subjectModel.addElement("----");
+        String classID = (String) classIDCb.getSelectedItem();
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
+    }
+
+    private String getStudentSelectQuery() {
+        String ci = (String) classIDCb.getSelectedItem();
+        String si = (String) subComboBox.getSelectedItem();
+        if ("----".equals(si)) return "from hibernate.java.Student S where S.classID = '" + ci + "'";
+        String query = "(select SLOS.studentID from hibernate.java.StudentLOS SLOS where SLOS.classID = '" + ci + "'";
+        if (si != null) query += "and SLOS.subjectID = '" + si + "')";
+        else query += ")";
+
+        query = "from hibernate.java.Student S where S.studentID in " + query;
+        return query;
+    }
+
+    private void reloadData() {
+        String query = getStudentSelectQuery();
+        studentList = HibernateDAO.getList(query);
+        displayData(studentList);
+    }
+
+    private void displayData(List<Student> l) {
+        tableModel.setRowCount(0);
+        for (int i = 0; i < l.size(); i++) {
+            Student s = l.get(i);
+            tableModel.addRow(new Object[]{"" + i, s.getStudentID(), s.getName(), s.getGender(), s.getIdCardNo()});
+        }
+    }
+
+    private void classIDComboBoxActionPerformed(ActionEvent e) {
+        reloadSubjectModel();
+        reloadData();
+    }
+
+    private void subComboBoxActionPerformed(ActionEvent e) {
+        reloadData();
+    }
+
+    private void keyTxtActionPerformed(ActionEvent e) {
+        if (keyTxf.getText() == null || keyTxf.getText().isEmpty()) {
+            displayData(studentList);
+            return;
+        }
+        String key = keyTxf.getText();
+        displayData(studentList.stream().filter((s) -> s.getStudentID().contains(key)).collect(Collectors.toList()));
+    }
+
     private void submitBtnActionPerformed(ActionEvent evt) {
         if (tableModel.getRowCount() == 0) {
             return;
@@ -234,17 +226,29 @@ public class RemoveStudentScreen extends Screen {
         String classID = (String) classIDCb.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
         String studentID = (String) tableModel.getValueAt(selectedRow, 1);
-        if (StudentDAO.removeStudent(studentID)) {
+        Score s = new Score(studentID,null,classID, subjectID,null,null,null,null);
+        StudentLOS los = new StudentLOS(studentID,classID,subjectID);
+
+        HibernateDAO.remove(Score.class, s);
+        boolean error = !HibernateDAO.remove(StudentLOS.class, los);
+
+        if ("----".equals(subjectID)){
+            List<StudentLOS> sl = HibernateDAO.getList("from hibernate.java.StudentLOS where studentID = '"
+                    + studentID + "'");
+            sl.forEach(HibernateDAO::remove);
+
+            boolean e2 = !HibernateDAO.remove(Student.class, studentID);
+            error = error & e2;
+        }
+
+        if (error) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Xoá Thất Bại", "Message", JOptionPane.INFORMATION_MESSAGE);
+        } else {
             reloadData();
             JOptionPane.showMessageDialog(new JFrame(),
                     "Xoá Thành Công", "Message", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(new JFrame(),
-                    "Xoá Thất Bại", "Message", JOptionPane.INFORMATION_MESSAGE);
         }
-
-        StudentLOS los = new StudentLOS(studentID,classID,subjectID);
-        StudentLOSDAO.remove(los);
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {

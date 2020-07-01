@@ -37,10 +37,31 @@ public class HibernateDAO {
         return true;
     }
 
-    public static boolean remove(Object o) {
+    public static<T> boolean remove(Class<T> c, Serializable o) {
+
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            T co = session.get(c, o);
+            if (co == null) {
+                return false;
+            }
+            transaction = session.beginTransaction();
+            session.delete(co);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
+    public static boolean remove(Object o) {
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.delete(o);
             transaction.commit();
@@ -69,9 +90,9 @@ public class HibernateDAO {
         return true;
     }
 
-    public static List getList(String query) {
+    public static<T> List<T> getList(String query) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List list = null;
+        List<T> list = null;
         try {
             list = session.createQuery(query).list();
         } catch (Exception e) {
@@ -80,5 +101,11 @@ public class HibernateDAO {
             session.close();
         }
         return list;
+    }
+
+    public static int executeUpdate(String query) {
+        System.out.println(query);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        return session.createQuery(query).executeUpdate();
     }
 }

@@ -33,7 +33,8 @@ public class ImportClassScheduleScreen extends Screen {
         tableModel.addColumn("Phòng Học");
         tableModel.addColumn("Trạng Thái");
 
-        List<IClass> il = IClassDAO.getList();
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -179,15 +180,15 @@ public class ImportClassScheduleScreen extends Screen {
             Subject sb = subjectList.get(i);
             ClassSchedule cs = csList.get(i);
             cs.setClassID(classID);
-            if (!SubjectDAO.addSubject(sb) || !ClassScheduleDAO.add(cs)) {
+            if (!HibernateDAO.add(sb) || !HibernateDAO.add(cs)) {
                 error = true;
                 tableModel.setValueAt("F", i, 4);
             } else {
                 tableModel.setValueAt("T", i, 4);
+                String query = "from hibernate.java.Student S where S.classID = '" + classID + "'";
+                List<Student> sl = HibernateDAO.getList(query);
+                sl.forEach((s)-> HibernateDAO.add(new StudentLOS(s.getStudentID(),classID,sb.getId())));
             }
-            StudentDAO.getList().stream()
-                    .filter((s)->s.getClassID().equals(classID)).collect(Collectors.toList())
-                    .forEach((s)-> StudentLOSDAO.add(new StudentLOS(s.getStudentID(),classID,sb.getId())));
         }
 
         if (!error) {

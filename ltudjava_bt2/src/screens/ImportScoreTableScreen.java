@@ -2,10 +2,9 @@ package screens;
 
 import helpers.CSVReader;
 import helpers.Helper;
-import hibernate.dao.ClassScheduleDAO;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.ScoreDAO;
+import hibernate.dao.HibernateDAO;
 import hibernate.java.Account;
+import hibernate.java.ClassSchedule;
 import hibernate.java.IClass;
 import hibernate.java.Score;
 
@@ -38,7 +37,8 @@ public class ImportScoreTableScreen extends Screen {
         tableModel.addColumn("Điểm Tổng");
         tableModel.addColumn("Trạng Thái");
 
-        List<IClass> il = IClassDAO.getList();
+        String query = "from hibernate.java.IClass";
+        List<IClass> il = HibernateDAO.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -59,9 +59,9 @@ public class ImportScoreTableScreen extends Screen {
         subjectModel.removeAllElements();
         subjectModel.addElement("----");
         String classID = (String) classIDCb.getSelectedItem();
-        ClassScheduleDAO.getList().stream()
-                .filter((cs) -> cs.getClassID().equals(classID))
-                .collect(Collectors.toList()).forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
+        String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
+        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
     private void reloadData() {
@@ -84,7 +84,7 @@ public class ImportScoreTableScreen extends Screen {
         fileLbl = new JLabel();
         tablePanel = new JPanel();
         tableScrollPanel = new JScrollPane();
-        tableModel = new DefaultTableModel(){
+        tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return !(column == 0 || column == 7);
@@ -215,8 +215,8 @@ public class ImportScoreTableScreen extends Screen {
         String ck;
         String khac;
         String tong;
-        String classID = (String)classIDCb.getSelectedItem();
-        String subjectID = (String)subComboBox.getSelectedItem();
+        String classID = (String) classIDCb.getSelectedItem();
+        String subjectID = (String) subComboBox.getSelectedItem();
         boolean error = false;
         for (int i = 0; i < n; i++) {
             id = (String) tableModel.getValueAt(i, 1);
@@ -228,7 +228,7 @@ public class ImportScoreTableScreen extends Screen {
             Score s = new Score(id, name, classID, subjectID,
                     Helper.parseFloat(gk), Helper.parseFloat(ck), Helper.parseFloat(khac), Helper.parseFloat(tong));
 
-            if (!ScoreDAO.add(s)) {
+            if (!HibernateDAO.add(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 7);
             } else {
@@ -238,10 +238,10 @@ public class ImportScoreTableScreen extends Screen {
 
         if (!error) {
             JOptionPane.showMessageDialog(new JFrame(),
-                    "Thêm Thành Công","Message",JOptionPane.INFORMATION_MESSAGE);
+                    "Thêm Thành Công", "Message", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(new JFrame(),
-                    "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
+                    "Thêm Thất Bại", "Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -281,7 +281,7 @@ public class ImportScoreTableScreen extends Screen {
             Score s = studentList.get(i);
             tableModel.addRow(new Object[]{String.valueOf(i + 1), s.getStudentID(), s.getStudentName(),
                     String.valueOf(s.getGk()), String.valueOf(s.getCk()),
-                    String.valueOf(s.getKhac()),String.valueOf(s.getTong()), "-"});
+                    String.valueOf(s.getKhac()), String.valueOf(s.getTong()), "-"});
         }
     }
 

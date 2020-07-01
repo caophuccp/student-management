@@ -2,8 +2,7 @@ package screens;
 
 import helpers.CSVReader;
 import helpers.Helper;
-import hibernate.dao.IClassDAO;
-import hibernate.dao.StudentDAO;
+import hibernate.dao.HibernateDAO;
 import hibernate.java.Account;
 import hibernate.java.IClass;
 import hibernate.java.Student;
@@ -74,7 +73,7 @@ public class ImportClassScreen extends Screen {
         appBarPanel.add(backBtn);
 
 
-        classIDLbl.setText("Ma Lop");
+        classIDLbl.setText("Mã Lớp");
         classIDLbl.setPreferredSize(new Dimension(60, 30));
         classIDPanel.add(classIDLbl);
 
@@ -83,7 +82,7 @@ public class ImportClassScreen extends Screen {
 
         fileChooserPanel.setLayout(new GridLayout(2, 0));
 
-        fileChooserBtn.setText("Chon File");
+        fileChooserBtn.setText("Chọn File");
         fileChooserBtn.setPreferredSize(new Dimension(120, 30));
         btnPanel.add(fileChooserBtn);
 
@@ -170,7 +169,7 @@ public class ImportClassScreen extends Screen {
         String gender;
         String idcard;
         String classID = classIDTxf.getText();
-        IClassDAO.add(new IClass(classID));
+        HibernateDAO.add(new IClass(classID));
         boolean error = false;
         for (int i = 0; i < n; i++) {
             id = (String) tableModel.getValueAt(i, 1);
@@ -178,7 +177,7 @@ public class ImportClassScreen extends Screen {
             gender = (String) tableModel.getValueAt(i, 3);
             idcard = (String) tableModel.getValueAt(i, 4);
             Student s = new Student(id, name, gender, idcard, classID);
-            if (!StudentDAO.addStudent(s)) {
+            if (!HibernateDAO.add(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 5);
             } else {
