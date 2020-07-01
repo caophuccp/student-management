@@ -2,56 +2,48 @@ package screens;
 
 import hibernate.java.Account;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class SVHomeScreen extends Screen {
-    private Account currentUser;
+    private final Account currentUser;
     public SVHomeScreen(Account account) {
         this.currentUser = account;
         initComponents();
         setLocationRelativeTo(null);
 //        setVisible(true);
+        btn1.addActionListener(this::btn1ActionPerformed);
     }
+    
     private void initComponents() {
 
-        topBar = new javax.swing.JPanel();
-        logoutBtn = new javax.swing.JButton();
-        accBtn = new javax.swing.JButton();
-        separator = new javax.swing.JSeparator();
-        bodyPanel = new javax.swing.JPanel();
-        btnPanel1 = new javax.swing.JPanel();
-        btn1 = new javax.swing.JButton();
+        topBar = new JPanel();
+        logoutBtn = new JButton();
+        accBtn = new JButton();
+        separator = new JSeparator();
+        bodyPanel = new JPanel();
+        btnPanel1 = new JPanel();
+        btn1 = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING);
+        FlowLayout flowLayout1 = new FlowLayout(FlowLayout.TRAILING);
         flowLayout1.setAlignOnBaseline(true);
         topBar.setLayout(flowLayout1);
 
         accBtn.setText("Đổi Mật Khẩu");
         accBtn.setPreferredSize(new Dimension(100,40));
-        accBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changePassword();
-            }
-        });
+        accBtn.addActionListener(e -> changePassword());
         topBar.add(accBtn);
 
         logoutBtn.setText("Đăng Xuất");
         logoutBtn.setPreferredSize(new Dimension(100,40));
-        logoutBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logout();
-            }
-        });
+        logoutBtn.addActionListener(e -> logout());
         topBar.add(logoutBtn);
 
-        bodyPanel.setLayout(new java.awt.GridLayout(1, 1));
+        bodyPanel.setLayout(new GridLayout(1, 1));
 
         btn1.setText("Xem Điểm");
         btn1.setPreferredSize(new Dimension(100,40));
@@ -59,31 +51,35 @@ public class SVHomeScreen extends Screen {
 
         bodyPanel.add(btnPanel1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(separator)
-                                        .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
-                                        .addComponent(topBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                                        .addComponent(topBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
         pack();
+    }
+
+    private void btn1ActionPerformed(ActionEvent e){
+        changeScreen(new StudentScoreScreen(currentUser));
     }
 
     private void changePassword(){
@@ -94,13 +90,12 @@ public class SVHomeScreen extends Screen {
         changeScreen(new LoginScreen());
     }
 
-    private javax.swing.JButton logoutBtn;
-    private javax.swing.JButton accBtn;
-    private javax.swing.JPanel bodyPanel;
-    private javax.swing.JButton btn1;
-    private javax.swing.JPanel btnPanel1;
-    private javax.swing.JSeparator separator;
-    private javax.swing.JPanel topBar;
-    // End of variables declaration
+    private JButton logoutBtn;
+    private JButton accBtn;
+    private JPanel bodyPanel;
+    private JButton btn1;
+    private JPanel btnPanel1;
+    private JSeparator separator;
+    private JPanel topBar;
 }
 
