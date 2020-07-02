@@ -13,8 +13,6 @@ public class SVHomeScreen extends Screen {
         super(parent);
         this.currentUser = account;
         initComponents();
-//        setLocationRelativeTo(null);
-//        setVisible(true);
         btn1.addActionListener(this::btn1ActionPerformed);
     }
     
@@ -27,8 +25,6 @@ public class SVHomeScreen extends Screen {
         bodyPanel = new JPanel();
         btnPanel1 = new JPanel();
         btn1 = new JButton();
-
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         FlowLayout flowLayout1 = new FlowLayout(FlowLayout.TRAILING);
         flowLayout1.setAlignOnBaseline(true);
@@ -52,8 +48,8 @@ public class SVHomeScreen extends Screen {
 
         bodyPanel.add(btnPanel1);
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -75,14 +71,10 @@ public class SVHomeScreen extends Screen {
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                                 .addContainerGap())
         );
-        parent.pack();
     }
 
     private void btn1ActionPerformed(ActionEvent e){
         changeScreen(new StudentScoreScreen(parent, currentUser));
-    }
-    private Container getContentPane(){
-        return this;
     }
     private void changePassword(){
         changeScreen(new AccSettingsScreen(parent, currentUser));

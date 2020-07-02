@@ -24,8 +24,6 @@ public class ImportClassScheduleScreen extends Screen {
         super(parent);
         this.currentUser = currentUser;
         initComponents();
-//        setLocationRelativeTo(null);
-        setVisible(true);
 
         tableModel.addColumn("STT");
         tableModel.addColumn("Mã Môn");
@@ -66,8 +64,6 @@ public class ImportClassScheduleScreen extends Screen {
             }
         };
         table = new JTable(tableModel);
-
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         backBtn.setText("huy");
         backBtn.addActionListener(this::backBtnActionPerformed);
@@ -148,8 +144,8 @@ public class ImportClassScheduleScreen extends Screen {
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -166,7 +162,6 @@ public class ImportClassScheduleScreen extends Screen {
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
     }
 
     private void submitBtnActionPerformed(ActionEvent e) {
@@ -198,14 +193,6 @@ public class ImportClassScheduleScreen extends Screen {
             JOptionPane.showMessageDialog(new JFrame(),
                     "Thêm Thất Bại","Message",JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
     }
 
     private void backBtnActionPerformed(ActionEvent e) {

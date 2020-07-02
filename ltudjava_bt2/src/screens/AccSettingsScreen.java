@@ -13,8 +13,6 @@ public class AccSettingsScreen extends Screen {
         super(parent);
         this.currentUser = account;
         initComponents();
-//        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private void initComponents() {
@@ -37,7 +35,7 @@ public class AccSettingsScreen extends Screen {
         submitBtn = new JButton();
 
 //        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new FlowLayout());
+        this.setLayout(new FlowLayout());
 
         home.setPreferredSize(new Dimension(300, 300));
 
@@ -111,17 +109,7 @@ public class AccSettingsScreen extends Screen {
                                 .addContainerGap())
         );
 
-        getContentPane().add(home);
-
-        pack();
-    }
-
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
+        this.add(home);
     }
 
     private void back(){

@@ -25,8 +25,6 @@ public class ImportScoreTableScreen extends Screen {
         super(parent);
         this.currentUser = currentUser;
         initComponents();
-//        setLocationRelativeTo(null);
-        setVisible(true);
 
         tableModel.addColumn("STT");
         tableModel.addColumn("MSSV");
@@ -67,13 +65,7 @@ public class ImportScoreTableScreen extends Screen {
     private void reloadData() {
 
     }
-    private Container getContentPane(){
-        return this;
-    }
 
-    private void pack(){
-        parent.pack();
-    }
     private void initComponents() {
 
         appBarPanel = new JPanel();
@@ -102,8 +94,6 @@ public class ImportScoreTableScreen extends Screen {
         subPanel = new JPanel();
         subLbl = new JLabel();
         subComboBox = new JComboBox<>(subjectModel);
-
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
@@ -189,8 +179,8 @@ public class ImportScoreTableScreen extends Screen {
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -207,7 +197,6 @@ public class ImportScoreTableScreen extends Screen {
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
     }
 
     private void submitBtnActionPerformed(ActionEvent evt) {

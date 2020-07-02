@@ -10,17 +10,8 @@ public class LoginScreen extends Screen {
     public LoginScreen(JFrame parent) {
         super(parent);
         initComponents();
-//        setLocationRelativeTo(null);
-        usernameTxf.setText("giaovu");
-        passwordTxf.setText("giaovu");
-    }
-    private Container getContentPane(){
-        return this;
     }
 
-    private void pack(){
-        parent.pack();
-    }
     private void initComponents() {
 
         body = new JPanel();
@@ -32,13 +23,9 @@ public class LoginScreen extends Screen {
         passwordTxf = new JPasswordField();
         loginBtnPanel = new JPanel();
         loginBtn = new JButton();
-        remCkb = new JCheckBox();
-        remLbl = new JLabel();
-        remPanel = new JPanel();
 
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(300, 250));
-        getContentPane().setLayout(new FlowLayout());
+        this.setLayout(new FlowLayout());
 
         body.setLayout(new GridLayout(4, 0));
 
@@ -60,15 +47,6 @@ public class LoginScreen extends Screen {
 
         body.add(pwPanel);
 
-        remPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        JPanel padding = new JPanel();
-        padding.setPreferredSize(new Dimension(100, 30));
-        remPanel.add(padding);
-        remPanel.add(remCkb);
-        remLbl.setText("Nhớ Mật Khẩu");
-        remPanel.add(remLbl);
-        body.add(remPanel);
-
         loginBtn.setForeground(new Color(255, 51, 51));
         loginBtn.setText("Đăng Nhập");
         loginBtn.setPreferredSize(new Dimension(100, 30));
@@ -77,9 +55,8 @@ public class LoginScreen extends Screen {
 
         body.add(loginBtnPanel);
 
-        getContentPane().add(body);
+        this.add(body);
 
-        pack();
     }
 
     private void loginBtnActionPerformed(ActionEvent evt) {
@@ -106,7 +83,4 @@ public class LoginScreen extends Screen {
     private JLabel usernameLbl;
     private JTextField usernameTxf;
     private JPanel usnPanel;
-    private JPanel remPanel;
-    private JCheckBox remCkb;
-    private JLabel remLbl;
 }

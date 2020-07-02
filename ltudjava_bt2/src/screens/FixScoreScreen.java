@@ -64,14 +64,6 @@ public class FixScoreScreen extends Screen {
         displayData(scoreList);
     }
 
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
-    }
-
     private void displayData(List<Score> l) {
         tableModel.setRowCount(0);
         for (int i = 0; i < l.size(); i++) {
@@ -127,9 +119,7 @@ public class FixScoreScreen extends Screen {
             }
         };
         table = new JTable(tableModel);
-
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         submitBtn.setText("Lưu");
@@ -204,8 +194,8 @@ public class FixScoreScreen extends Screen {
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -222,7 +212,6 @@ public class FixScoreScreen extends Screen {
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
     }
 
     private void submitBtnActionPerformed(ActionEvent evt) {

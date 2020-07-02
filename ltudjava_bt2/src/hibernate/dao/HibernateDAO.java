@@ -102,10 +102,4 @@ public class HibernateDAO {
         }
         return list;
     }
-
-    public static int executeUpdate(String query) {
-        System.out.println(query);
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        return session.createQuery(query).executeUpdate();
-    }
 }

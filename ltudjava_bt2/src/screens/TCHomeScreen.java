@@ -15,7 +15,6 @@ public class TCHomeScreen extends Screen {
         super(parent);
         this.currentUser = account;
         initComponents();
-//        setLocationRelativeTo(null);
         btn1.setText("Thêm Danh Sách Lớp");
         btn2.setText("Xem Danh Sách Lớp");
         btn3.setText("Thêm Sinh Viên");
@@ -38,35 +37,33 @@ public class TCHomeScreen extends Screen {
     }
     private void initComponents() {
 
-        topBar = new javax.swing.JPanel();
-        logoutBtn = new javax.swing.JButton();
-        accBtn = new javax.swing.JButton();
-        separator = new javax.swing.JSeparator();
-        bodyPanel = new javax.swing.JPanel();
-        btnPanel1 = new javax.swing.JPanel();
-        btn1 = new javax.swing.JButton();
-        btnPanel2 = new javax.swing.JPanel();
-        btn2 = new javax.swing.JButton();
-        btnPanel3 = new javax.swing.JPanel();
-        btn3 = new javax.swing.JButton();
-        btnPanel4 = new javax.swing.JPanel();
-        btn4 = new javax.swing.JButton();
-        btnPanel5 = new javax.swing.JPanel();
-        btn5 = new javax.swing.JButton();
-        btnPanel6 = new javax.swing.JPanel();
-        btn6 = new javax.swing.JButton();
-        btnPanel7 = new javax.swing.JPanel();
-        btn7 = new javax.swing.JButton();
-        btnPanel8 = new javax.swing.JPanel();
-        btn8 = new javax.swing.JButton();
-        btnPanel9 = new javax.swing.JPanel();
-        btn9 = new javax.swing.JButton();
+        topBar = new JPanel();
+        logoutBtn = new JButton();
+        accBtn = new JButton();
+        separator = new JSeparator();
+        bodyPanel = new JPanel();
+        btnPanel1 = new JPanel();
+        btn1 = new JButton();
+        btnPanel2 = new JPanel();
+        btn2 = new JButton();
+        btnPanel3 = new JPanel();
+        btn3 = new JButton();
+        btnPanel4 = new JPanel();
+        btn4 = new JButton();
+        btnPanel5 = new JPanel();
+        btn5 = new JButton();
+        btnPanel6 = new JPanel();
+        btn6 = new JButton();
+        btnPanel7 = new JPanel();
+        btn7 = new JButton();
+        btnPanel8 = new JPanel();
+        btn8 = new JButton();
+        btnPanel9 = new JPanel();
+        btn9 = new JButton();
 
         Dimension btnSize = new Dimension(200, 40);
 
-//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING);
+        FlowLayout flowLayout1 = new FlowLayout(FlowLayout.TRAILING);
         flowLayout1.setAlignOnBaseline(true);
         topBar.setLayout(flowLayout1);
 
@@ -90,7 +87,7 @@ public class TCHomeScreen extends Screen {
         });
         topBar.add(logoutBtn);
 
-        bodyPanel.setLayout(new java.awt.GridLayout(3, 3));
+        bodyPanel.setLayout(new GridLayout(3, 3));
 
         btn1.setPreferredSize(btnSize);
         btnPanel1.add(btn1);
@@ -137,31 +134,29 @@ public class TCHomeScreen extends Screen {
 
         bodyPanel.add(btnPanel9);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(separator)
-                                        .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(topBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(topBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
         );
-
-        pack();
     }
 
     private void removeStudent(){
@@ -202,35 +197,27 @@ public class TCHomeScreen extends Screen {
         changeScreen(new LoginScreen(parent));
     }
 
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
-    }
-
-    private javax.swing.JButton logoutBtn;
-    private javax.swing.JButton accBtn;
-    private javax.swing.JPanel bodyPanel;
-    private javax.swing.JButton btn1;
-    private javax.swing.JButton btn2;
-    private javax.swing.JButton btn3;
-    private javax.swing.JButton btn4;
-    private javax.swing.JButton btn5;
-    private javax.swing.JButton btn6;
-    private javax.swing.JButton btn7;
-    private javax.swing.JButton btn8;
-    private javax.swing.JButton btn9;
-    private javax.swing.JPanel btnPanel1;
-    private javax.swing.JPanel btnPanel2;
-    private javax.swing.JPanel btnPanel3;
-    private javax.swing.JPanel btnPanel4;
-    private javax.swing.JPanel btnPanel5;
-    private javax.swing.JPanel btnPanel6;
-    private javax.swing.JPanel btnPanel7;
-    private javax.swing.JPanel btnPanel8;
-    private javax.swing.JPanel btnPanel9;
-    private javax.swing.JSeparator separator;
-    private javax.swing.JPanel topBar;
+    private JButton logoutBtn;
+    private JButton accBtn;
+    private JPanel bodyPanel;
+    private JButton btn1;
+    private JButton btn2;
+    private JButton btn3;
+    private JButton btn4;
+    private JButton btn5;
+    private JButton btn6;
+    private JButton btn7;
+    private JButton btn8;
+    private JButton btn9;
+    private JPanel btnPanel1;
+    private JPanel btnPanel2;
+    private JPanel btnPanel3;
+    private JPanel btnPanel4;
+    private JPanel btnPanel5;
+    private JPanel btnPanel6;
+    private JPanel btnPanel7;
+    private JPanel btnPanel8;
+    private JPanel btnPanel9;
+    private JSeparator separator;
+    private JPanel topBar;
 }

@@ -1,6 +1,7 @@
 package hibernate.java;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ClassSchedule implements Serializable {
     String subjectID;
@@ -41,5 +42,20 @@ public class ClassSchedule implements Serializable {
 
     public void setClassroom(String classroom) {
         this.classroom = classroom;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClassSchedule schedule = (ClassSchedule) o;
+        return Objects.equals(subjectID, schedule.subjectID) &&
+                Objects.equals(classID, schedule.classID) &&
+                Objects.equals(classroom, schedule.classroom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subjectID, classID, classroom);
     }
 }

@@ -18,8 +18,6 @@ public class ClassScheduleScreen extends Screen{
         super(parent);
         this.currentUser = currentUser;
         initComponents();
-//        setLocationRelativeTo(null);
-        setVisible(true);
 
         table.setEnabled(false);
         tableModel.addColumn("STT");
@@ -133,8 +131,8 @@ public class ClassScheduleScreen extends Screen{
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -150,16 +148,6 @@ public class ClassScheduleScreen extends Screen{
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        pack();
-    }
-
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {

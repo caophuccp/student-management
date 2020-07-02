@@ -8,7 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AddStudentScreen extends Screen {
     Account currentUser;
@@ -17,7 +16,6 @@ public class AddStudentScreen extends Screen {
         super(parent);
         this.currentUser = currentUser;
         initComponents();
-//        setLocationRelativeTo(null);
         setVisible(true);
 
         tableModel.addColumn("STT");
@@ -78,7 +76,6 @@ public class AddStudentScreen extends Screen {
         };
         table = new JTable(tableModel);
 
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
@@ -151,8 +148,8 @@ public class AddStudentScreen extends Screen {
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -168,16 +165,6 @@ public class AddStudentScreen extends Screen {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        pack();
-    }
-
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
     }
 
     private void classIDComboBoxActionPerformed(ActionEvent evt) {
@@ -185,7 +172,7 @@ public class AddStudentScreen extends Screen {
     }
 
     private void addBtnActionPerformed(ActionEvent e) {
-        tableModel.addRow(new Object[]{"" + tableModel.getRowCount() + 1, null, null, null, null, "-"});
+        tableModel.addRow(new Object[]{"" + (tableModel.getRowCount() + 1), null, null, null, null, "-"});
     }
 
     private void submitBtnActionPerformed(ActionEvent e) {
@@ -209,6 +196,7 @@ public class AddStudentScreen extends Screen {
             gender = (String) tableModel.getValueAt(i, 3);
             idcard = (String) tableModel.getValueAt(i, 4);
             Student s = new Student(id, name, gender, idcard, classID);
+
             if (!HibernateDAO.add(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 5);
@@ -218,11 +206,11 @@ public class AddStudentScreen extends Screen {
 
             if (bs) {
                 StudentLOS los = new StudentLOS(id, classID, subjectID);
-                HibernateDAO.add(los);
-//
-//                String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-//                List<ClassSchedule> cl = HibernateDAO.getList(query);
-//                cl.forEach();
+                error = HibernateDAO.add(los);
+            } else {
+                String query = "from hibernate.java.ClassSchedule where classID = '" + classID + "'";
+                List<ClassSchedule> cl = HibernateDAO.getList(query);
+                cl.forEach((c) -> HibernateDAO.add(new StudentLOS(s.getStudentID(), c.getClassID(), c.getSubjectID())));
             }
         }
 

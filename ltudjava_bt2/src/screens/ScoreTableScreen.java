@@ -16,8 +16,6 @@ public class ScoreTableScreen extends Screen{
         super(parent);
         this.currentUser = currentUser;
         initComponents();
-//        setLocationRelativeTo(null);
-        setVisible(true);
 
         table.setEnabled(false);
 
@@ -99,14 +97,6 @@ public class ScoreTableScreen extends Screen{
         reloadData();
     }
 
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
-    }
-
     private void initComponents() {
 
         classModel = new DefaultComboBoxModel<>();
@@ -132,8 +122,6 @@ public class ScoreTableScreen extends Screen{
         tkPanel = new JPanel();
         tkScrollPanel = new JScrollPane();
         tkTable = new JTable(tkTabelModel);
-
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
@@ -193,8 +181,8 @@ public class ScoreTableScreen extends Screen{
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -211,7 +199,6 @@ public class ScoreTableScreen extends Screen{
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {

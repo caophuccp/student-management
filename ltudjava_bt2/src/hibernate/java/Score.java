@@ -1,6 +1,7 @@
 package hibernate.java;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Score implements Serializable {
     String studentID;
@@ -95,6 +96,26 @@ public class Score implements Serializable {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Score score = (Score) o;
+        return Objects.equals(studentID, score.studentID) &&
+                Objects.equals(classID, score.classID) &&
+                Objects.equals(subjectID, score.subjectID) &&
+                Objects.equals(gk, score.gk) &&
+                Objects.equals(ck, score.ck) &&
+                Objects.equals(khac, score.khac) &&
+                Objects.equals(tong, score.tong) &&
+                Objects.equals(studentName, score.studentName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentID, classID, subjectID);
     }
 
     @Override

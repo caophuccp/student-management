@@ -1,5 +1,7 @@
 package hibernate.java;
 
+import java.util.Objects;
+
 public class StudentLOS implements java.io.Serializable{
     String studentID;
     String classID;
@@ -39,6 +41,22 @@ public class StudentLOS implements java.io.Serializable{
 
     public void setSubjectID(String subjectID) {
         this.subjectID = subjectID;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudentLOS los = (StudentLOS) o;
+        return Objects.equals(studentID, los.studentID) &&
+                Objects.equals(classID, los.classID) &&
+                Objects.equals(subjectID, los.subjectID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentID, classID, subjectID);
     }
 
     @Override

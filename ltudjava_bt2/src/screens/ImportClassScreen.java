@@ -40,14 +40,6 @@ public class ImportClassScreen extends Screen {
 
     }
 
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
-    }
-
     private void initComponents() {
 
         appBarPanel = new JPanel();
@@ -71,7 +63,6 @@ public class ImportClassScreen extends Screen {
             }
         };
         table = new JTable(tableModel);
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
@@ -147,8 +138,8 @@ public class ImportClassScreen extends Screen {
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -165,7 +156,6 @@ public class ImportClassScreen extends Screen {
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
     }
 
     private void submitBtnActionPerformed(ActionEvent evt) {

@@ -19,8 +19,6 @@ public class StudentScoreScreen extends Screen{
         super(parent);
         this.currentUser = currentUser;
         initComponents();
-//        setLocationRelativeTo(null);
-        setVisible(true);
 
         table.setEnabled(false);
         tableModel.addColumn("STT");
@@ -80,7 +78,6 @@ public class StudentScoreScreen extends Screen{
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
 
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
@@ -135,8 +132,8 @@ public class StudentScoreScreen extends Screen{
                                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -153,7 +150,6 @@ public class StudentScoreScreen extends Screen{
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
     }
 
     private void backBtnActionPerformed(ActionEvent evt) {
@@ -163,15 +159,7 @@ public class StudentScoreScreen extends Screen{
             changeScreen(new SVHomeScreen(parent, currentUser));
         }
     }
-
-    private Container getContentPane(){
-        return this;
-    }
-
-    private void pack(){
-        parent.pack();
-    }
-
+    
     void reloadData(){
         String classID = (String) classIDComboBox.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
