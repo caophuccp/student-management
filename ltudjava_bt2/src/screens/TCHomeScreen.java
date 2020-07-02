@@ -3,6 +3,7 @@ package screens;
 
 import hibernate.java.Account;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,10 +11,11 @@ import java.awt.event.ActionListener;
 
 public class TCHomeScreen extends Screen {
     private Account currentUser;
-    public TCHomeScreen(Account account) {
+    public TCHomeScreen(JFrame parent, Account account) {
+        super(parent);
         this.currentUser = account;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         btn1.setText("Thêm Danh Sách Lớp");
         btn2.setText("Xem Danh Sách Lớp");
         btn3.setText("Thêm Sinh Viên");
@@ -62,7 +64,7 @@ public class TCHomeScreen extends Screen {
 
         Dimension btnSize = new Dimension(200, 40);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING);
         flowLayout1.setAlignOnBaseline(true);
@@ -163,41 +165,49 @@ public class TCHomeScreen extends Screen {
     }
 
     private void removeStudent(){
-        changeScreen(new RemoveStudentScreen(currentUser));
+        changeScreen(new RemoveStudentScreen(parent, currentUser));
     }
 
     private void fixScore(){
-        changeScreen(new FixScoreScreen(currentUser));
+        changeScreen(new FixScoreScreen(parent, currentUser));
     }
 
     private void scoreTable(){
-        changeScreen(new ScoreTableScreen(currentUser));
+        changeScreen(new ScoreTableScreen(parent, currentUser));
     }
     private void importScore(){
-        changeScreen(new ImportScoreTableScreen(currentUser));
+        changeScreen(new ImportScoreTableScreen(parent, currentUser));
     }
     private void dsClassSchedule(){
-        changeScreen(new ClassScheduleScreen(currentUser));
+        changeScreen(new ClassScheduleScreen(parent, currentUser));
     }
     private void importStudentList(){
-        changeScreen(new ImportClassScreen(currentUser));
+        changeScreen(new ImportClassScreen(parent, currentUser));
     }
     private void dsClass(){
-        changeScreen(new StudentListScreen(currentUser));
+        changeScreen(new StudentListScreen(parent, currentUser));
     }
     private void addStudent(){
-        changeScreen(new AddStudentScreen(currentUser));
+        changeScreen(new AddStudentScreen(parent, currentUser));
     }
     private void importClassSchedule(){
-        changeScreen(new ImportClassScheduleScreen(currentUser));
+        changeScreen(new ImportClassScheduleScreen(parent, currentUser));
     }
 
     private void changePassword(){
-        changeScreen(new AccSettingsScreen(currentUser));
+        changeScreen(new AccSettingsScreen(parent, currentUser));
     }
 
     private void logout(){
-        changeScreen(new LoginScreen());
+        changeScreen(new LoginScreen(parent));
+    }
+
+    private Container getContentPane(){
+        return this;
+    }
+
+    private void pack(){
+        parent.pack();
     }
 
     private javax.swing.JButton logoutBtn;

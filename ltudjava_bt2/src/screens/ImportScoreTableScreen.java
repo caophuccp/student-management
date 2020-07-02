@@ -16,16 +16,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class ImportScoreTableScreen extends Screen {
     Account currentUser;
 
-    public ImportScoreTableScreen(Account currentUser) {
+    public ImportScoreTableScreen(JFrame parent, Account currentUser) {
+        super(parent);
         this.currentUser = currentUser;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         setVisible(true);
 
         tableModel.addColumn("STT");
@@ -67,7 +67,13 @@ public class ImportScoreTableScreen extends Screen {
     private void reloadData() {
 
     }
+    private Container getContentPane(){
+        return this;
+    }
 
+    private void pack(){
+        parent.pack();
+    }
     private void initComponents() {
 
         appBarPanel = new JPanel();
@@ -97,7 +103,7 @@ public class ImportScoreTableScreen extends Screen {
         subLbl = new JLabel();
         subComboBox = new JComboBox<>(subjectModel);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
@@ -256,9 +262,9 @@ public class ImportScoreTableScreen extends Screen {
 
     private void backBtnActionPerformed(ActionEvent evt) {
         if (currentUser.getCategory() == 1) {
-            changeScreen(new TCHomeScreen(currentUser));
+            changeScreen(new TCHomeScreen(parent, currentUser));
         } else {
-            changeScreen(new SVHomeScreen(currentUser));
+            changeScreen(new SVHomeScreen(parent, currentUser));
         }
     }
 

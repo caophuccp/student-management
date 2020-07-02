@@ -7,13 +7,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 public class LoginScreen extends Screen {
-    public LoginScreen() {
+    public LoginScreen(JFrame parent) {
+        super(parent);
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         usernameTxf.setText("giaovu");
         passwordTxf.setText("giaovu");
     }
+    private Container getContentPane(){
+        return this;
+    }
 
+    private void pack(){
+        parent.pack();
+    }
     private void initComponents() {
 
         body = new JPanel();
@@ -29,7 +36,7 @@ public class LoginScreen extends Screen {
         remLbl = new JLabel();
         remPanel = new JPanel();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(300, 250));
         getContentPane().setLayout(new FlowLayout());
 
@@ -81,9 +88,9 @@ public class LoginScreen extends Screen {
         Account account = HibernateDAO.get(Account.class, username);
         if (account.getPassword().equals(password)) {
             if (account.getCategory() == 1) {
-                changeScreen(new TCHomeScreen(account));
+                changeScreen(new TCHomeScreen(parent, account));
             } else {
-                changeScreen(new SVHomeScreen(account));
+                changeScreen(new SVHomeScreen(parent, account));
             }
         } else {
             JOptionPane.showMessageDialog(new JFrame(),"Sai Tên Đăng Nhập Hoặc Mật Khẩu","Message",JOptionPane.INFORMATION_MESSAGE);

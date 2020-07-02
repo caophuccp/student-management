@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,10 +20,11 @@ public class ImportClassScheduleScreen extends Screen {
     Account currentUser;
     List<Subject> subjectList;
     List<ClassSchedule> csList;
-    public ImportClassScheduleScreen(Account currentUser) {
+    public ImportClassScheduleScreen(JFrame parent, Account currentUser) {
+        super(parent);
         this.currentUser = currentUser;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         setVisible(true);
 
         tableModel.addColumn("STT");
@@ -67,7 +67,7 @@ public class ImportClassScheduleScreen extends Screen {
         };
         table = new JTable(tableModel);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         backBtn.setText("huy");
         backBtn.addActionListener(this::backBtnActionPerformed);
@@ -200,11 +200,19 @@ public class ImportClassScheduleScreen extends Screen {
         }
     }
 
+    private Container getContentPane(){
+        return this;
+    }
+
+    private void pack(){
+        parent.pack();
+    }
+
     private void backBtnActionPerformed(ActionEvent e) {
         if (currentUser.getCategory() == 1) {
-            changeScreen(new TCHomeScreen(currentUser));
+            changeScreen(new TCHomeScreen(parent, currentUser));
         } else {
-            changeScreen(new SVHomeScreen(currentUser));
+            changeScreen(new SVHomeScreen(parent, currentUser));
         }
     }
 

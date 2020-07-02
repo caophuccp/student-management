@@ -15,10 +15,11 @@ public class FixScoreScreen extends Screen {
     Account currentUser;
     List<Score> scoreList;
 
-    public FixScoreScreen(Account currentUser) {
+    public FixScoreScreen(JFrame parent, Account currentUser) {
+        super(parent);
         this.currentUser = currentUser;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         setVisible(true);
 
         tableModel.addColumn("STT");
@@ -61,6 +62,14 @@ public class FixScoreScreen extends Screen {
             score.setStudentName(s.getName());
         }
         displayData(scoreList);
+    }
+
+    private Container getContentPane(){
+        return this;
+    }
+
+    private void pack(){
+        parent.pack();
     }
 
     private void displayData(List<Score> l) {
@@ -119,7 +128,7 @@ public class FixScoreScreen extends Screen {
         };
         table = new JTable(tableModel);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
@@ -259,9 +268,9 @@ public class FixScoreScreen extends Screen {
 
     private void backBtnActionPerformed(ActionEvent evt) {
         if (currentUser.getCategory() == 1) {
-            changeScreen(new TCHomeScreen(currentUser));
+            changeScreen(new TCHomeScreen(parent, currentUser));
         } else {
-            changeScreen(new SVHomeScreen(currentUser));
+            changeScreen(new SVHomeScreen(parent, currentUser));
         }
     }
 

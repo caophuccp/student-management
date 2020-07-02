@@ -9,10 +9,11 @@ import java.awt.event.ActionListener;
 
 public class SVHomeScreen extends Screen {
     private final Account currentUser;
-    public SVHomeScreen(Account account) {
+    public SVHomeScreen(JFrame parent, Account account) {
+        super(parent);
         this.currentUser = account;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
 //        setVisible(true);
         btn1.addActionListener(this::btn1ActionPerformed);
     }
@@ -27,7 +28,7 @@ public class SVHomeScreen extends Screen {
         btnPanel1 = new JPanel();
         btn1 = new JButton();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         FlowLayout flowLayout1 = new FlowLayout(FlowLayout.TRAILING);
         flowLayout1.setAlignOnBaseline(true);
@@ -74,20 +75,21 @@ public class SVHomeScreen extends Screen {
                                 .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                                 .addContainerGap())
         );
-
-        pack();
+        parent.pack();
     }
 
     private void btn1ActionPerformed(ActionEvent e){
-        changeScreen(new StudentScoreScreen(currentUser));
+        changeScreen(new StudentScoreScreen(parent, currentUser));
     }
-
+    private Container getContentPane(){
+        return this;
+    }
     private void changePassword(){
-        changeScreen(new AccSettingsScreen(currentUser));
+        changeScreen(new AccSettingsScreen(parent, currentUser));
     }
 
     private void logout(){
-        changeScreen(new LoginScreen());
+        changeScreen(new LoginScreen(parent));
     }
 
     private JButton logoutBtn;

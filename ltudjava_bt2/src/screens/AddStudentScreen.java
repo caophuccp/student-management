@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 public class AddStudentScreen extends Screen {
     Account currentUser;
 
-    public AddStudentScreen(Account currentUser) {
+    public AddStudentScreen(JFrame parent, Account currentUser) {
+        super(parent);
         this.currentUser = currentUser;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         setVisible(true);
 
         tableModel.addColumn("STT");
@@ -77,7 +78,7 @@ public class AddStudentScreen extends Screen {
         };
         table = new JTable(tableModel);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         appBarPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
@@ -171,6 +172,14 @@ public class AddStudentScreen extends Screen {
         pack();
     }
 
+    private Container getContentPane(){
+        return this;
+    }
+
+    private void pack(){
+        parent.pack();
+    }
+
     private void classIDComboBoxActionPerformed(ActionEvent evt) {
         reloadSubjectModel();
     }
@@ -228,9 +237,9 @@ public class AddStudentScreen extends Screen {
 
     private void backBtnActionPerformed(ActionEvent evt) {
         if (currentUser.getCategory() == 1) {
-            changeScreen(new TCHomeScreen(currentUser));
+            changeScreen(new TCHomeScreen(parent, currentUser));
         } else {
-            changeScreen(new SVHomeScreen(currentUser));
+            changeScreen(new SVHomeScreen(parent, currentUser));
         }
     }
 

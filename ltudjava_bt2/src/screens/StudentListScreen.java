@@ -3,18 +3,21 @@ package screens;
 import hibernate.dao.HibernateDAO;
 import hibernate.java.*;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StudentListScreen extends Screen{
     Account currentUser;
-    public StudentListScreen(Account currentUser) {
+    
+    public StudentListScreen(JFrame parent ,Account currentUser) {
+        super(parent);
         this.currentUser = currentUser;
         initComponents();
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
         setVisible(true);
 
         table.setEnabled(false);
@@ -75,23 +78,23 @@ public class StudentListScreen extends Screen{
         classModel = new DefaultComboBoxModel<>();
         subjectModel = new DefaultComboBoxModel<>();
 
-        appBarPanel = new javax.swing.JPanel();
-        backBtn = new javax.swing.JButton();
-        separator = new javax.swing.JSeparator();
-        bodyPanel = new javax.swing.JPanel();
-        optPanel = new javax.swing.JPanel();
-        classIDPanel = new javax.swing.JPanel();
-        classIDLbl = new javax.swing.JLabel();
-        classIDComboBox = new javax.swing.JComboBox<>();
-        subPanel = new javax.swing.JPanel();
-        subLbl = new javax.swing.JLabel();
-        subComboBox = new javax.swing.JComboBox<>();
-        tablePanel = new javax.swing.JPanel();
-        tableScrollPanel = new javax.swing.JScrollPane();
+        appBarPanel = new JPanel();
+        backBtn = new JButton();
+        separator = new JSeparator();
+        bodyPanel = new JPanel();
+        optPanel = new JPanel();
+        classIDPanel = new JPanel();
+        classIDLbl = new JLabel();
+        classIDComboBox = new JComboBox<>();
+        subPanel = new JPanel();
+        subLbl = new JLabel();
+        subComboBox = new JComboBox<>();
+        tablePanel = new JPanel();
+        tableScrollPanel = new JScrollPane();
         tableModel = new DefaultTableModel();
-        table = new javax.swing.JTable(tableModel);
+        table = new JTable(tableModel);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         appBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
 
         backBtn.setText("Huỷ");
@@ -115,52 +118,55 @@ public class StudentListScreen extends Screen{
 
         optPanel.add(subPanel);
 
-        tablePanel.setLayout(new javax.swing.BoxLayout(tablePanel, javax.swing.BoxLayout.LINE_AXIS));
+        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.LINE_AXIS));
         tableScrollPanel.setViewportView(table);
 
         tablePanel.add(tableScrollPanel);
 
-        javax.swing.GroupLayout bodyPanelLayout = new javax.swing.GroupLayout(bodyPanel);
+        GroupLayout bodyPanelLayout = new GroupLayout(bodyPanel);
         bodyPanel.setLayout(bodyPanelLayout);
         bodyPanelLayout.setHorizontalGroup(
-                bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                bodyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                 .addGap(3, 3, 3)
-                                .addComponent(optPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(optPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(tablePanel, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         bodyPanelLayout.setVerticalGroup(
-                bodyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                bodyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(bodyPanelLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
-                                .addComponent(optPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                                .addComponent(optPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(appBarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(appBarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(separator)
-                        .addComponent(bodyPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bodyPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(appBarPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bodyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(appBarPanel, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bodyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
+        parent.pack();
+    }
+    private Container getContentPane(){
+        return this;
     }
     private void classIDComboBoxActionPerformed(ActionEvent evt) {
         reloadSubjectModel();
@@ -172,26 +178,26 @@ public class StudentListScreen extends Screen{
 
     private void backBtnActionPerformed(ActionEvent evt) {
         if (currentUser.getCategory() == 1) {
-            changeScreen(new TCHomeScreen(currentUser));
+            changeScreen(new TCHomeScreen(parent, currentUser));
         } else {
-            changeScreen(new SVHomeScreen(currentUser));
+            changeScreen(new SVHomeScreen(parent, currentUser));
         }
     }
 
-    private javax.swing.JPanel appBarPanel;
-    private javax.swing.JButton backBtn;
-    private javax.swing.JPanel bodyPanel;
-    private javax.swing.JComboBox<String> classIDComboBox;
-    private javax.swing.JLabel classIDLbl;
-    private javax.swing.JPanel classIDPanel;
-    private javax.swing.JPanel optPanel;
-    private javax.swing.JSeparator separator;
-    private javax.swing.JComboBox<String> subComboBox;
-    private javax.swing.JLabel subLbl;
-    private javax.swing.JPanel subPanel;
-    private javax.swing.JTable table;
-    private javax.swing.JPanel tablePanel;
-    private javax.swing.JScrollPane tableScrollPanel;
+    private JPanel appBarPanel;
+    private JButton backBtn;
+    private JPanel bodyPanel;
+    private JComboBox<String> classIDComboBox;
+    private JLabel classIDLbl;
+    private JPanel classIDPanel;
+    private JPanel optPanel;
+    private JSeparator separator;
+    private JComboBox<String> subComboBox;
+    private JLabel subLbl;
+    private JPanel subPanel;
+    private JTable table;
+    private JPanel tablePanel;
+    private JScrollPane tableScrollPanel;
     private DefaultTableModel tableModel;
     private DefaultComboBoxModel<String> classModel;
     private DefaultComboBoxModel<String> subjectModel;
