@@ -1,7 +1,7 @@
 package screens;
 
 import helpers.Helper;
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.*;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class FixScoreScreen extends Screen {
         tableModel.addColumn("Trạng Thái");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -48,7 +48,7 @@ public class FixScoreScreen extends Screen {
         subjectModel.addElement("----");
         String classID = (String) classIDCb.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -56,9 +56,9 @@ public class FixScoreScreen extends Screen {
         String classID = (String) classIDCb.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
         String query = "from hibernate.java.Score S where S.classID = '" + classID + "' and S.subjectID = '" + subjectID + "'";
-        scoreList = HibernateDAO.getList(query);
+        scoreList = DAOUtils.getList(query);
         for (Score score : scoreList) {
-            Student s = HibernateDAO.get(Student.class ,score.getStudentID());
+            Student s = DAOUtils.get(Student.class ,score.getStudentID());
             score.setStudentName(s.getName());
         }
         displayData(scoreList);
@@ -238,7 +238,7 @@ public class FixScoreScreen extends Screen {
             Score s = new Score(id, name, classID, subjectID,
                     Helper.parseFloat(gk), Helper.parseFloat(ck), Helper.parseFloat(khac), Helper.parseFloat(tong));
 
-            if (!HibernateDAO.update(s)) {
+            if (!DAOUtils.update(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 7);
             } else {

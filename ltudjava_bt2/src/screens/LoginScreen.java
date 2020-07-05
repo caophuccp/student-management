@@ -1,6 +1,6 @@
 package screens;
 
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.Account;
 
 import javax.swing.*;
@@ -62,16 +62,17 @@ public class LoginScreen extends Screen {
     private void loginBtnActionPerformed(ActionEvent evt) {
         String username = usernameTxf.getText();
         String password = String.valueOf(passwordTxf.getPassword());
-        Account account = HibernateDAO.get(Account.class, username);
-        if (account.getPassword().equals(password)) {
+        Account account = DAOUtils.get(Account.class, username);
+        if (account != null && account.getPassword().equals(password)) {
             if (account.getCategory() == 1) {
                 changeScreen(new TCHomeScreen(parent, account));
             } else {
                 changeScreen(new SVHomeScreen(parent, account));
             }
         } else {
-            JOptionPane.showMessageDialog(new JFrame(),"Sai Tên Đăng Nhập Hoặc Mật Khẩu","Message",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Sai Tên Đăng Nhập Hoặc Mật Khẩu","Message",JOptionPane.INFORMATION_MESSAGE);
         }
+
     }
 
     private JPanel body;

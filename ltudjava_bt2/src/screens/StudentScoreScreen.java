@@ -1,7 +1,7 @@
 package screens;
 
 import helpers.Helper;
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.Account;
 import hibernate.java.ClassSchedule;
 import hibernate.java.IClass;
@@ -30,7 +30,7 @@ public class StudentScoreScreen extends Screen{
         tableModel.addColumn("Tổng");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         classModel.addElement("----");
         for (IClass iClass : il) {
             classModel.addElement(iClass.getClassID());
@@ -44,7 +44,7 @@ public class StudentScoreScreen extends Screen{
         subjectModel.addElement("----");
         String classID = (String)classIDComboBox.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -168,7 +168,7 @@ public class StudentScoreScreen extends Screen{
         if (classID != null && !"----".equals(classID)) query += "and CS.classID = '" + classID + "'";
 
 
-        List<Score> l = HibernateDAO.getList(query);
+        List<Score> l = DAOUtils.getList(query);
         tableModel.setRowCount(0);
         for (int i = 0; i < l.size(); i++) {
             Score s = l.get(i);

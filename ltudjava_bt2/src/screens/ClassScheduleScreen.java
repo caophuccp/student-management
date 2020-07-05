@@ -1,6 +1,6 @@
 package screens;
 
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.Account;
 import hibernate.java.ClassSchedule;
 import hibernate.java.IClass;
@@ -10,7 +10,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClassScheduleScreen extends Screen{
     Account currentUser;
@@ -26,7 +25,7 @@ public class ClassScheduleScreen extends Screen{
         tableModel.addColumn("Phòng Học");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -42,7 +41,7 @@ public class ClassScheduleScreen extends Screen{
         subjectModel.addElement("----");
         String classID = (String)classIDComboBox.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -163,7 +162,7 @@ public class ClassScheduleScreen extends Screen{
         String subjectID = (String) subComboBox.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
         if (subjectID != null && !"----".equals(subjectID)) query += "and CS.subjectID = '" + subjectID + "'";
-        List<ClassSchedule> l = HibernateDAO.getList(query);
+        List<ClassSchedule> l = DAOUtils.getList(query);
         tableModel.setRowCount(0);
         for (int i = 0; i < l.size(); i++) {
             ClassSchedule cs = l.get(i);

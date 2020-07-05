@@ -1,12 +1,11 @@
 package screens;
 
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.*;
 
 import javax.swing.table.DefaultTableModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class StudentListScreen extends Screen{
         tableModel.addColumn("CMND");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -46,7 +45,7 @@ public class StudentListScreen extends Screen{
         subjectModel.addElement("----");
         String classID = (String)classIDComboBox.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -62,7 +61,7 @@ public class StudentListScreen extends Screen{
     private void reloadData(){
 
         String query = getStudentSelectQuery();
-        List<Student> studentList = HibernateDAO.getList(query);
+        List<Student> studentList = DAOUtils.getList(query);
 
         tableModel.setRowCount(0);
         for (int i = 0; i < studentList.size(); i++) {

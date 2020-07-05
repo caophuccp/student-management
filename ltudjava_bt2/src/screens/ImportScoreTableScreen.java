@@ -2,7 +2,7 @@ package screens;
 
 import helpers.CSVReader;
 import helpers.Helper;
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.Account;
 import hibernate.java.ClassSchedule;
 import hibernate.java.IClass;
@@ -36,7 +36,7 @@ public class ImportScoreTableScreen extends Screen {
         tableModel.addColumn("Trạng Thái");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -58,7 +58,7 @@ public class ImportScoreTableScreen extends Screen {
         subjectModel.addElement("----");
         String classID = (String) classIDCb.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -223,7 +223,7 @@ public class ImportScoreTableScreen extends Screen {
             Score s = new Score(id, name, classID, subjectID,
                     Helper.parseFloat(gk), Helper.parseFloat(ck), Helper.parseFloat(khac), Helper.parseFloat(tong));
 
-            if (!HibernateDAO.add(s)) {
+            if (!DAOUtils.add(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 7);
             } else {

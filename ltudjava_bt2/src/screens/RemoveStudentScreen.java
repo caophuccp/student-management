@@ -1,6 +1,5 @@
 package screens;
 
-import helpers.Helper;
 import hibernate.dao.*;
 import hibernate.java.*;
 
@@ -29,7 +28,7 @@ public class RemoveStudentScreen extends Screen {
         tableModel.addColumn("CMND");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -168,7 +167,7 @@ public class RemoveStudentScreen extends Screen {
         subjectModel.addElement("----");
         String classID = (String) classIDCb.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -186,7 +185,7 @@ public class RemoveStudentScreen extends Screen {
 
     private void reloadData() {
         String query = getStudentSelectQuery();
-        studentList = HibernateDAO.getList(query);
+        studentList = DAOUtils.getList(query);
         displayData(studentList);
     }
 
@@ -227,15 +226,15 @@ public class RemoveStudentScreen extends Screen {
         Score s = new Score(studentID,null,classID, subjectID,null,null,null,null);
         StudentLOS los = new StudentLOS(studentID,classID,subjectID);
 
-        HibernateDAO.remove(Score.class, s);
-        boolean error = !HibernateDAO.remove(StudentLOS.class, los);
+        DAOUtils.remove(Score.class, s);
+        boolean error = !DAOUtils.remove(StudentLOS.class, los);
 
         if ("----".equals(subjectID)){
-            List<StudentLOS> sl = HibernateDAO.getList("from hibernate.java.StudentLOS where studentID = '"
+            List<StudentLOS> sl = DAOUtils.getList("from hibernate.java.StudentLOS where studentID = '"
                     + studentID + "'");
-            sl.forEach(HibernateDAO::remove);
+            sl.forEach(DAOUtils::remove);
 
-            boolean e2 = !HibernateDAO.remove(Student.class, studentID);
+            boolean e2 = !DAOUtils.remove(Student.class, studentID);
             error = error & e2;
         }
 

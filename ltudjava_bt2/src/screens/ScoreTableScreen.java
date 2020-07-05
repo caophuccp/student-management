@@ -8,7 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ScoreTableScreen extends Screen{
     Account currentUser;
@@ -36,7 +35,7 @@ public class ScoreTableScreen extends Screen{
         tkTabelModel.addRow(new Object[]{0,0,0,0,0});
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -55,7 +54,7 @@ public class ScoreTableScreen extends Screen{
         subjectModel.addElement("----");
         String classID = (String)classIDComboBox.getSelectedItem();
         String query = "from hibernate.java.ClassSchedule CS where CS.classID = '" + classID + "'";
-        List<ClassSchedule> cl = HibernateDAO.getList(query);
+        List<ClassSchedule> cl = DAOUtils.getList(query);
         cl.forEach((cs) -> subjectModel.addElement(cs.getSubjectID()));
     }
 
@@ -63,9 +62,9 @@ public class ScoreTableScreen extends Screen{
         String classID = (String) classIDComboBox.getSelectedItem();
         String subjectID = (String) subComboBox.getSelectedItem();
         String query = "from hibernate.java.Score S where S.classID = '" + classID + "' and S.subjectID = '" + subjectID + "'";
-        List<Score> l = HibernateDAO.getList(query);
+        List<Score> l = DAOUtils.getList(query);
         for (Score score : l) {
-            Student s = HibernateDAO.get(Student.class, score.getStudentID());
+            Student s = DAOUtils.get(Student.class, score.getStudentID());
             score.setStudentName(s.getName());
         }
         tableModel.setRowCount(0);
@@ -74,10 +73,10 @@ public class ScoreTableScreen extends Screen{
             Score cs = l.get(i);
             String rs;
             if (cs.getTong() < 5) {
-                rs = "Đậu";
-                d += 1;
-            } else {
                 rs = "Rớt";
+            } else {
+                d += 1;
+                rs = "Đậu";
             }
             tableModel.addRow(new Object[]{"" + (i + 1), cs.getStudentID(), cs.getStudentName(), cs.getGk(),
             cs.getCk(), cs.getKhac(), cs.getTong(), rs});

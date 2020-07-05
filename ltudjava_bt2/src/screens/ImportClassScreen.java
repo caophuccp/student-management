@@ -2,7 +2,7 @@ package screens;
 
 import helpers.CSVReader;
 import helpers.Helper;
-import hibernate.dao.HibernateDAO;
+import hibernate.dao.DAOUtils;
 import hibernate.java.Account;
 import hibernate.java.IClass;
 import hibernate.java.Student;
@@ -168,7 +168,7 @@ public class ImportClassScreen extends Screen {
         String gender;
         String idcard;
         String classID = classIDTxf.getText();
-        HibernateDAO.add(new IClass(classID));
+        DAOUtils.add(new IClass(classID));
         boolean error = false;
         for (int i = 0; i < n; i++) {
             id = (String) tableModel.getValueAt(i, 1);
@@ -176,7 +176,7 @@ public class ImportClassScreen extends Screen {
             gender = (String) tableModel.getValueAt(i, 3);
             idcard = (String) tableModel.getValueAt(i, 4);
             Student s = new Student(id, name, gender, idcard, classID);
-            if (!HibernateDAO.add(s)) {
+            if (!DAOUtils.add(s)) {
                 error = true;
                 tableModel.setValueAt("F", i, 5);
             } else {

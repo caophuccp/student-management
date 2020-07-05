@@ -32,7 +32,7 @@ public class ImportClassScheduleScreen extends Screen {
         tableModel.addColumn("Trạng Thái");
 
         String query = "from hibernate.java.IClass";
-        List<IClass> il = HibernateDAO.getList(query);
+        List<IClass> il = DAOUtils.getList(query);
         if (il.isEmpty()) {
             classModel.addElement("----");
         }
@@ -175,14 +175,14 @@ public class ImportClassScheduleScreen extends Screen {
             Subject sb = subjectList.get(i);
             ClassSchedule cs = csList.get(i);
             cs.setClassID(classID);
-            if (!HibernateDAO.add(sb) || !HibernateDAO.add(cs)) {
+            if (!DAOUtils.add(sb) || !DAOUtils.add(cs)) {
                 error = true;
                 tableModel.setValueAt("F", i, 4);
             } else {
                 tableModel.setValueAt("T", i, 4);
                 String query = "from hibernate.java.Student S where S.classID = '" + classID + "'";
-                List<Student> sl = HibernateDAO.getList(query);
-                sl.forEach((s)-> HibernateDAO.add(new StudentLOS(s.getStudentID(),classID,sb.getId())));
+                List<Student> sl = DAOUtils.getList(query);
+                sl.forEach((s)-> DAOUtils.add(new StudentLOS(s.getStudentID(),classID,sb.getId())));
             }
         }
 

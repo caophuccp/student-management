@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 import java.io.Serializable;
 import java.util.List;
 
-public class HibernateDAO {
+public class DAOUtils {
     public static<T> T get(Class<T> c, Serializable s) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         T object = null;
