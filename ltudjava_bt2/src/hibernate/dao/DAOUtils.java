@@ -86,6 +86,7 @@ public class DAOUtils {
                 transaction.rollback();
             }
             e.printStackTrace();
+            return false;
         }
         return true;
     }
